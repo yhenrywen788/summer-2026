@@ -157,6 +157,25 @@
   .detail-note{background:rgba(224,169,46,.12);border-left:3px solid var(--sun);padding:11px 14px;border-radius:8px;font-size:.86rem;color:#8a6a22;margin-top:14px;}
   .detail-actions{display:flex;gap:10px;margin-top:22px;flex-wrap:wrap;}
   .detail-actions .star-btn,.detail-actions .pick-btn{width:auto;flex:1;min-width:130px;}
+  /* Henry's Shortlist */
+  .toolbar{position:relative;z-index:2;max-width:1280px;margin:16px auto 0;padding:0 32px;display:flex;gap:10px;flex-wrap:wrap;}
+  .henry-btn{font-family:inherit;font-weight:700;font-size:.9rem;padding:10px 18px;border-radius:10px;cursor:pointer;border:2px solid var(--clay);background:var(--clay);color:#fff;display:inline-flex;align-items:center;gap:8px;transition:all .15s ease;}
+  .henry-btn:hover{filter:brightness(1.06);transform:translateY(-1px);}
+  .henry-btn .hc{background:rgba(255,255,255,.28);border-radius:20px;padding:1px 8px;font-size:.8rem;min-width:20px;text-align:center;}
+  .share-banner{position:relative;z-index:3;max-width:1280px;margin:14px auto 0;padding:11px 18px;border-radius:10px;background:rgba(201,111,63,.14);border:1px solid var(--clay);color:#9a4a22;font-size:.9rem;font-weight:600;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+  .share-banner .sp{flex:1;}
+  .share-banner button{font-family:inherit;font-weight:600;font-size:.82rem;padding:6px 12px;border-radius:8px;border:1px solid var(--clay);background:transparent;color:#9a4a22;cursor:pointer;}
+  .share-banner button:hover{background:var(--clay);color:#fff;}
+  .henry-list{margin:14px 0;}
+  .henry-wk{font-family:'Fraunces',serif;font-weight:700;color:var(--moss-deep);font-size:.95rem;margin:14px 0 6px;}
+  .henry-item{padding:8px 12px;border:1px solid var(--line);border-radius:9px;margin-bottom:6px;font-size:.88rem;}
+  .henry-item b{color:var(--ink);}
+  .henry-item small{color:#7a8a7d;display:block;margin-top:2px;}
+  .henry-empty{color:#9aa89d;font-style:italic;padding:10px 0;}
+  .henry-actions{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap;}
+  .henry-actions button{font-family:inherit;font-weight:600;padding:10px 16px;border-radius:9px;border:none;cursor:pointer;}
+  .h-copy{background:var(--clay);color:#fff;}
+  .h-done{background:var(--moss-deep);color:var(--paper);}
   footer{position:relative;z-index:2;max-width:1280px;margin:30px auto 0;padding:22px 32px 0;border-top:1px solid var(--line);font-size:.8rem;color:#7a8a7d;}
   @media(max-width:600px){header{padding:34px 18px 18px;}.controls,main,footer{padding-left:18px;padding-right:18px;}}
 </style>
@@ -172,6 +191,10 @@
     <span><span class="swatch sw8"></span> 8-year-old</span>
   </div>
 </header>
+<div class="toolbar">
+  <button id="henryBtn" class="henry-btn">★ Henry's Shortlist <span class="hc" id="henryCount">0</span></button>
+</div>
+<div id="shareBanner" class="share-banner" style="display:none"></div>
 <div class="controls">
   <div class="ctrl-group"><span class="ctrl-label">Category</span>
     <div class="chips" id="catChips">
@@ -236,6 +259,10 @@
 
 <div class="modal-bg" id="detailBg">
   <div class="modal" id="detailModal"></div>
+</div>
+
+<div class="modal-bg" id="henryBg">
+  <div class="modal" id="henryModal"></div>
 </div>
 
 <script>
@@ -400,7 +427,7 @@
   activities.push({wk:"w6",town:"Belmont",cat:"sport",name:"Volleyball Summer",line:"Volleyball clinic · ages 10–14",time:"9 AM–12 PM (Mon–Thu)",date:"Jul 27–30",loc:"Winn Brook Gym, Belmont",fee:"$180–195",cost:180,fits:["10"],rest:"best",restLabel:"Best rest · upper body",note:"Fits the 10yo only (10–14). Also Aug 3–6. Indoor court.",desc:`Coach Couture and members of the BHS Volleyball team teach fundamentals of passing, setting, hitting, serving, and blocking through drills, then applying them in game situations. Suited to players prepping for high school tryouts as well as newcomers.`,url:"https://belmontma.myrec.com/info/activities/program_details.aspx?ProgramID=29930"});
   activities.push({wk:"w6",town:"Belmont",cat:"sport",name:"Flag Football Clinic",line:"Flag football · ages 7–14",time:"9 AM–12 PM (Tue–Thu)",date:"Jul 28–30",loc:"Winn Brook Field, Belmont",fee:"$172",cost:172,fits:["8","10"],rest:"flag",restLabel:"Higher leg load",note:"Single 3-day session. Running-heavy. Fits both boys.",desc:`Led by 'Coach Al' Costabile (Mass. HS Football Coach Hall of Fame, 23 years head coach at Shawsheen) and Elite Sport staff. Kids learn flag-football fundamentals through drills and competitive games, grouped by age and ability, with a week of games plus a Thursday playoff and Super Bowl tournament.`,url:"https://belmontma.myrec.com/info/activities/program_details.aspx?ProgramID=29940"});
 
-  activities.forEach(a=>a._id="a"+(_id++));
+  activities.forEach(a=>{a._id="a"+(_id++);a.sig=a.town+"~"+a.wk+"~"+a.name;});
 
   const catName={sport:"Sport",tech:"Tech & Science",art:"Art",mind:"Enrichment"};
   const townLabel={Reading:"Reading",Winchester:"Winchester",Lexington:"Lexington",Belmont:"Belmont",Gordon:"Gordon"};
@@ -488,7 +515,7 @@
       // also clear any kid picks for that activity
       const a=actById(id); if(a){['10','8'].forEach(b=>{const arr=selArr(b,a.wk);const i=arr.indexOf(id);if(i>=0)arr.splice(i,1);});}
     } else { shortlist[id]=true; }
-    render(); updateSummary();
+    persistHenry(); render(); updateSummary();
   };
   window.clearOne=function(boy,wk,id){
     const arr=selArr(boy,wk); const i=arr.indexOf(id); if(i>=0)arr.splice(i,1); render(); updateSummary();
@@ -714,6 +741,56 @@
   };
   document.getElementById('detailBg').addEventListener('click',e=>{if(e.target.id==='detailBg')document.getElementById('detailBg').classList.remove('show');});
   document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.getElementById('detailBg').classList.remove('show');document.getElementById('modalBg').classList.remove('show');}});
+
+  // ---- Henry's Shortlist: save to this browser + shareable read-only link ----
+  const SL_KEY='henryShortlist_v1';
+  let sharedView=false;
+  function slEncode(sigs){ return btoa(unescape(encodeURIComponent(JSON.stringify(sigs)))); }
+  function slDecode(s){ try{ return JSON.parse(decodeURIComponent(escape(atob(s)))); }catch(e){ return null; } }
+  function currentSigs(){ return Object.keys(shortlist).map(id=>{const a=actById(id);return a?a.sig:null;}).filter(Boolean); }
+  function idForSig(s){ const a=activities.find(x=>x.sig===s); return a?a._id:null; }
+  function updateHenryCount(){ const el=document.getElementById('henryCount'); if(el) el.textContent=Object.keys(shortlist).length; }
+  function persistHenry(){
+    if(!sharedView){ try{ localStorage.setItem(SL_KEY, JSON.stringify(currentSigs())); }catch(e){} }
+    updateHenryCount();
+  }
+  function applySigs(sigs){
+    shortlist={}; pick10={}; pick8={};
+    sigs.forEach(s=>{ const id=idForSig(s); if(id) shortlist[id]=true; });
+  }
+  function shareLink(){ return location.origin+location.pathname+'#hs='+slEncode(currentSigs()); }
+  function buildHenryModal(){
+    const wkOrder=weeks.map(w=>w.key);
+    const items=activities.filter(a=>isShort(a._id)).sort((x,y)=>wkOrder.indexOf(x.wk)-wkOrder.indexOf(y.wk));
+    let body='';
+    if(!items.length){ body='<div class="henry-empty">No options shortlisted yet. Tap ☆ on any card to add it here.</div>'; }
+    else { let curWk=null; items.forEach(a=>{ if(a.wk!==curWk){ curWk=a.wk; body+=`<div class="henry-wk">${weekTitle(a.wk)}</div>`; }
+      body+=`<div class="henry-item"><b>${a.name}</b> — ${a.town}<small>${a.time} · ${a.date} · ${a.fee}</small></div>`; }); }
+    const sub = sharedView
+      ? `Shared by Henry — these are the options he's considering for the boys. Read-only view.`
+      : `Saved to this browser. Tap "Copy share link" and send it to your co-parent — when she opens that link she'll see exactly these options.`;
+    const actions = sharedView
+      ? `<button class="h-done" onclick="document.getElementById('henryBg').classList.remove('show')">Close</button>`
+      : `<button class="h-copy" id="hCopy">Copy share link</button><button class="h-done" onclick="document.getElementById('henryBg').classList.remove('show')">Close</button>`;
+    document.getElementById('henryModal').innerHTML=`<h2>★ Henry's Shortlist</h2><div class="msub">${sub}</div><div class="henry-list">${body}</div><div class="henry-actions">${actions}</div>`;
+    const cp=document.getElementById('hCopy');
+    if(cp) cp.addEventListener('click',()=>{ const link=shareLink(); (navigator.clipboard?navigator.clipboard.writeText(link):Promise.reject()).then(()=>{cp.textContent='Link copied!';setTimeout(()=>cp.textContent='Copy share link',1600);}).catch(()=>{ prompt('Copy this link and send it to your co-parent:', link); }); });
+  }
+  document.getElementById('henryBtn').addEventListener('click',()=>{ buildHenryModal(); document.getElementById('henryBg').classList.add('show'); });
+  document.getElementById('henryBg').addEventListener('click',e=>{if(e.target.id==='henryBg')document.getElementById('henryBg').classList.remove('show');});
+
+  (function initHenry(){
+    const m=location.hash.match(/hs=([^&]+)/);
+    if(m){ const sigs=slDecode(m[1]); if(sigs&&sigs.length){
+      applySigs(sigs); sharedView=true; viewMode='short';
+      document.querySelectorAll('#viewChips .chip').forEach(c=>c.classList.toggle('active',c.dataset.view==='short'));
+      const b=document.getElementById('shareBanner'); b.style.display='flex';
+      b.innerHTML=`👀 <span>Viewing <b>Henry's Shortlist</b> — ${sigs.length} option${sigs.length>1?'s':''} he's considering.</span><span class="sp"></span><button id="exitShared">Exit shared view</button>`;
+      document.getElementById('exitShared').addEventListener('click',()=>{ location.hash=''; location.reload(); });
+    } }
+    if(!sharedView){ try{ const raw=localStorage.getItem(SL_KEY); if(raw){ const sigs=JSON.parse(raw); if(Array.isArray(sigs)) applySigs(sigs); } }catch(e){} }
+    updateHenryCount();
+  })();
 
   render(); updateSummary();
 </script>
