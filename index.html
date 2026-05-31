@@ -144,6 +144,14 @@
   .mc-done{background:var(--moss-deep);color:var(--paper);}
   .mc-copy{background:var(--sun);color:#3a2e0a;}
   .cost-row td{font-weight:700;background:rgba(224,169,46,.12);}
+  /* camp detail modal */
+  .detail-pills{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:10px;align-items:center;}
+  .detail-meta{display:grid;grid-template-columns:auto 1fr;gap:9px 18px;font-size:.92rem;margin:20px 0 4px;}
+  .detail-meta dt{font-weight:700;color:var(--moss-deep);white-space:nowrap;}
+  .detail-meta dd{color:#4a5a4d;}
+  .detail-note{background:rgba(224,169,46,.12);border-left:3px solid var(--sun);padding:11px 14px;border-radius:8px;font-size:.86rem;color:#8a6a22;margin-top:14px;}
+  .detail-actions{display:flex;gap:10px;margin-top:22px;flex-wrap:wrap;}
+  .detail-actions .star-btn,.detail-actions .pick-btn{width:auto;flex:1;min-width:130px;}
   footer{position:relative;z-index:2;max-width:1280px;margin:30px auto 0;padding:22px 32px 0;border-top:1px solid var(--line);font-size:.8rem;color:#7a8a7d;}
   @media(max-width:600px){header{padding:34px 18px 18px;}.controls,main,footer{padding-left:18px;padding-right:18px;}}
 </style>
@@ -227,6 +235,10 @@
       <button class="mc-done" id="closeModal">Close</button>
     </div>
   </div>
+</div>
+
+<div class="modal-bg" id="detailBg">
+  <div class="modal" id="detailModal"></div>
 </div>
 
 <script>
@@ -401,7 +413,7 @@
         <button class="pick-btn b10 ${on10?'on':''}" ${can10?'':'disabled'} onclick="toggle('10','${a.wk}','${a._id}')">${on10?'✓ 10yo':'Pick 10yo'}</button>
         <button class="pick-btn b8 ${on8?'on':''}" ${can8?'':'disabled'} onclick="toggle('8','${a.wk}','${a._id}')">${on8?'✓ 8yo':'Pick 8yo'}</button>
       </div>` : '';
-    return `<div class="card ${a.cat}${selClass}" id="card_${a._id}">
+    return `<div class="card ${a.cat}${selClass}" id="card_${a._id}" style="cursor:pointer" onclick="cardClick(event,'${a._id}')" title="Click for full details">
       <div class="card-top"><span class="catpill ${a.cat}">${catName[a.cat]}</span><span class="townpill ${a.town}">${a.town}</span><span class="timetag">${a.time}</span></div>
       <h3>${a.name} ${a.full?'<span class="full-badge">FULL</span>':''}</h3>
       <div class="sportline">${a.line}</div>
@@ -551,6 +563,54 @@
     if(!any) return;
     if(confirm('Clear all selections?')){pick10={};pick8={};render();updateSummary();}
   });
+
+  // ---- camp detail modal ----
+  let detailId=null;
+  function weekTitle(wk){const w=weeks.find(x=>x.key===wk);return w?w.title:wk;}
+  window.cardClick=function(e,id){
+    if(e.target.closest('button')) return; // let star/pick buttons handle their own clicks
+    detailId=id; renderDetail();
+    document.getElementById('detailBg').classList.add('show');
+  };
+  window.renderDetail=function(){
+    const a=actById(detailId); if(!a) return;
+    const can10=a.fits.includes('10'), can8=a.fits.includes('8');
+    const on10=selArr('10',a.wk).includes(a._id), on8=selArr('8',a.wk).includes(a._id);
+    const sh=isShort(a._id);
+    const restHtml=a.rest==='na'?`🧠 ${a.restLabel}`:`🦵 ${a.restLabel}`;
+    const fitsTxt=[can10?'10-year-old':null,can8?'8-year-old':null].filter(Boolean).join(' & ')||'—';
+    const feeTxt=a.cost?`${a.fee} · counts as $${a.cost.toLocaleString()} in tally`:`${a.fee} · not included in tally`;
+    const pickBtns = sh ? `
+        <button class="pick-btn b10 ${on10?'on':''}" ${can10?'':'disabled'} onclick="toggle('10','${a.wk}','${a._id}');renderDetail();">${on10?'✓ 10yo picked':'Pick 10yo'}</button>
+        <button class="pick-btn b8 ${on8?'on':''}" ${can8?'':'disabled'} onclick="toggle('8','${a.wk}','${a._id}');renderDetail();">${on8?'✓ 8yo picked':'Pick 8yo'}</button>` : '';
+    document.getElementById('detailModal').innerHTML=`
+      <div class="detail-pills">
+        <span class="catpill ${a.cat}">${catName[a.cat]}</span>
+        <span class="townpill ${a.town}">${a.town}</span>
+        ${a.full?'<span class="full-badge">FULL</span>':''}
+      </div>
+      <h2>${a.name}</h2>
+      <div class="msub">${a.line}</div>
+      <dl class="detail-meta">
+        <dt>Week</dt><dd>${weekTitle(a.wk)}</dd>
+        <dt>Dates</dt><dd>${a.date}</dd>
+        <dt>Time</dt><dd>${a.time}</dd>
+        <dt>Location</dt><dd>${a.loc}</dd>
+        <dt>Fee</dt><dd>${feeTxt}</dd>
+        <dt>Soccer-rest</dt><dd>${restHtml}</dd>
+        <dt>Good for</dt><dd>${fitsTxt}</dd>
+      </dl>
+      ${a.note?`<div class="detail-note">${a.note}</div>`:''}
+      <div class="detail-actions">
+        <button class="star-btn ${sh?'on':''}" onclick="toggleShort('${a._id}');renderDetail();">${sh?'★ Shortlisted':'☆ Shortlist'}</button>
+        ${pickBtns}
+      </div>
+      <div class="modal-close">
+        <button class="mc-done" onclick="document.getElementById('detailBg').classList.remove('show')">Close</button>
+      </div>`;
+  };
+  document.getElementById('detailBg').addEventListener('click',e=>{if(e.target.id==='detailBg')document.getElementById('detailBg').classList.remove('show');});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.getElementById('detailBg').classList.remove('show');document.getElementById('modalBg').classList.remove('show');}});
 
   render(); updateSummary();
 </script>
