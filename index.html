@@ -100,6 +100,8 @@
   .rest-flag{background:rgba(201,111,63,.14);color:#9a4a22;}
   .rest-na{background:rgba(125,90,125,.12);color:#5a3a5a;}
   .full-badge{font-size:.58rem;font-weight:700;color:#fff;background:#c0392b;padding:2px 6px;border-radius:5px;}
+  .open-badge{font-size:.58rem;font-weight:700;color:#26604f;background:rgba(47,125,106,.18);padding:2px 6px;border-radius:5px;}
+  .chk-badge{font-size:.58rem;font-weight:700;color:#7a6a3a;background:rgba(224,169,46,.20);padding:2px 6px;border-radius:5px;cursor:help;}
   .card-actions{margin-top:11px;}
   .star-btn{width:100%;font-family:inherit;font-size:.78rem;font-weight:700;padding:7px 8px;border-radius:8px;cursor:pointer;border:1.5px solid var(--sun);background:transparent;color:#9a7a18;transition:all .15s ease;}
   .star-btn:hover{background:rgba(224,169,46,.16);}
@@ -231,7 +233,7 @@
 </div>
 <main id="board"></main>
 <footer>
-  Built from live town Recreation program pages (Reading, Winchester, Lexington, Belmont; dates confirmed May 2026). Soccer, outdoor/nature adventure camps, and generic day camps excluded. Lexington programs are residents-first (non-resident pricing shown); Belmont archery meets Thursday evenings in Watertown (counted under its start week). Selections live in this page only — use “View / copy plan” or the share link to keep them. Re-confirm dates, fees, and grade eligibility on each town's myrec portal before registering. Cost tally uses the lower (resident) fee where a range is shown and is approximate.
+  Built from live town Recreation program pages (Reading, Winchester, Lexington, Belmont; dates confirmed May 2026). Soccer, outdoor/nature adventure camps, and generic day camps excluded. Lexington programs are residents-first (non-resident pricing shown); Belmont archery meets Thursday evenings in Watertown (counted under its start week). Selections live in this page only — use “View / copy plan” or the share link to keep them. Re-confirm dates, fees, and grade eligibility on each town's myrec portal before registering. Cost tally uses the lower (resident) fee where a range is shown and is approximate. Open/full status was checked May 31, 2026 where the portal shows it: 🟢 OPEN and 🔴 FULL are confirmed; ⚪ CHECK means availability isn't public (Reading's myrec and the Viking/Minuteman vendor pages hide live seats) — log in to confirm. Status changes daily; re-confirm before registering.
 </footer>
 
 <div class="summary">
@@ -470,7 +472,7 @@
       </div>` : '';
     return `<div class="card ${a.cat}${selClass}" id="card_${a._id}" style="cursor:pointer" onclick="cardClick(event,'${a._id}')" title="Click for full details">
       <div class="card-top"><span class="catpill ${a.cat}">${catName[a.cat]}</span><span class="townpill ${a.town}">${a.town}</span><span class="timetag">${a.time}</span></div>
-      <h3>${a.name} ${a.full?'<span class="full-badge">FULL</span>':''}</h3>
+      <h3>${a.name} ${statusBadge(a)}</h3>
       <div class="sportline">${a.line}</div>
       <div class="meta">
         <div><span class="ic">📅</span><span>${a.date}</span></div>
@@ -650,6 +652,87 @@
     "Minuteman":{u:"https://www.lexingtonma.gov/2504/Summer-Sports-Clinics-and-Classes",d:`The Minuteman Sports Clinics, run by Lexington High School coaches, offer youth participants the chance to learn a new sport or further develop their skills through drills and fun team games. Offerings include Badminton, Basketball (Boys & Girls Hoop), Flag Football, Floor Hockey, Multi-Sports, Track, and Volleyball.`},
     "Belmont Youth Archery":{u:"https://belmontma.myrec.com/info/activities/program_details.aspx?ProgramID=29832",d:`Experience the thrill of traditional recurve archery, as seen in the Olympics. Participants learn the fundamentals of the shot process and test their skills in a series of unique challenges and archery games designed to improve accuracy. Led by certified USA Archery and NFAA instructors, the "learn by playing" philosophy lets students enjoy shooting while practicing fundamentals of the shot process.`}
   };
+  // Live open/full status, checked May 31, 2026 (only where the portal shows it).
+  const statusMap={
+    "Winchester~w3~Tennis Youth (Grades 3–5)":{s:"open",d:"Open — only the Jul 6–10 week is full."},
+    "Winchester~w3~Wicked Cool — Med School":{s:"open"},
+    "Winchester~w3~3D Printing (Grades 5–8)":{s:"open"},
+    "Winchester~w3~Woodworking (Grades 5–8)":{s:"open"},
+    "Winchester~w3~Art Studio Summer (Grades 1–5)":{s:"open",d:"All 5 weekly sessions have seats."},
+    "Winchester~w5~Buildwave (Grades K–5)":{s:"open"},
+    "Winchester~w5~Wicked Cool — Hogwarts":{s:"open"},
+    "Winchester~w5~Slimetopia (Grades K–5)":{s:"open"},
+    "Winchester~w7~Kids' Test Kitchen (Grades K–5)":{s:"open",d:"Aug 3–7 open (the Jul 13–17 week is full)."},
+    "Winchester~w7~Circuit Makers & Robot Commanders 101":{s:"open"},
+    "Winchester~w2~Summer Sports Adventure Camp":{s:"unknown",d:"Seats not shown without login."},
+    "Winchester~w6~Football — Summer Clinics (Grades K–5)":{s:"unknown",d:"Seats not shown without login."},
+    "Lexington~w4~Archery Summer Clinic (AM)":{s:"unknown",d:"myrec page shows 'program unavailable' — no sessions listed."},
+    "Lexington~w4~Archery Summer Clinic (PM)":{s:"unknown",d:"myrec page shows 'program unavailable' — no sessions listed."},
+    "Lexington~w8~Archery Summer Clinic (AM)":{s:"unknown",d:"myrec page shows 'program unavailable' — no sessions listed."},
+    "Lexington~w8~Archery Summer Clinic (PM)":{s:"unknown",d:"myrec page shows 'program unavailable' — no sessions listed."},
+    "Lexington~w4~Right Brain STEM: Shark Tank & Architects":{s:"unknown",d:"myrec page shows 'program unavailable' — no sessions listed."},
+    "Lexington~w8~Right Brain STEM: Minecraft & LEGO":{s:"unknown",d:"myrec page shows 'program unavailable' — no sessions listed."},
+    "Lexington~w5~Snapology: Mining & Mega Machines Robotics":{s:"open"},
+    "Lexington~w6~Snapology: Pokémania & GameBots Robotics":{s:"open"},
+    "Lexington~w2~Circuit Lab: Circuit Makers 101 & Robots":{s:"open"},
+    "Lexington~w3~Circuit Lab: Electronics & App Inventors":{s:"open"},
+    "Lexington~w7~Circuit Lab: Interactive Coding for Kids":{s:"open"},
+    "Lexington~w2~Viking Ninja Warrior Camp":{s:"unknown",d:"Register at vikingcamps.com — no live seat count."},
+    "Lexington~w4~Viking Multi-Sport Camp":{s:"unknown",d:"Register at vikingcamps.com — no live seat count."},
+    "Lexington~w5~Viking Basketball Camp":{s:"unknown",d:"Register at vikingcamps.com — no live seat count."},
+    "Lexington~w6~Viking Flag Football Camp":{s:"unknown",d:"Register at vikingcamps.com — no live seat count."},
+    "Lexington~w7~Viking Ninja Warrior Camp":{s:"unknown",d:"Register at vikingcamps.com — no live seat count."},
+    "Lexington~w8~Viking Multi-Sport Camp":{s:"unknown",d:"Register at vikingcamps.com — no live seat count."},
+    "Lexington~w2~Minuteman Boys Hoop (half day)":{s:"unknown",d:"Lexington info page only — check the rec portal."},
+    "Lexington~w3~Minuteman Boys Hoop (full day)":{s:"unknown",d:"Lexington info page only — check the rec portal."},
+    "Lexington~w4~Minuteman Badminton Clinic":{s:"unknown",d:"Lexington info page only — check the rec portal."},
+    "Lexington~w4~Minuteman Flag Football Clinic":{s:"unknown",d:"Lexington info page only — check the rec portal."},
+    "Lexington~w5~Minuteman Multi-Sports Clinic":{s:"unknown",d:"Lexington info page only — check the rec portal."},
+    "Lexington~w5~Minuteman Track Clinic":{s:"unknown",d:"Lexington info page only — check the rec portal."},
+    "Lexington~w6~Minuteman Track Clinic":{s:"unknown",d:"Lexington info page only — check the rec portal."},
+    "Lexington~w6~Minuteman Volleyball Clinic":{s:"unknown",d:"Lexington info page only — check the rec portal."},
+    "Lexington~w7~Minuteman Flag Football Clinic":{s:"unknown",d:"Lexington info page only — check the rec portal."},
+    "Lexington~w2~Blue Sox Baseball Camp":{s:"open",d:"Seats available."},
+    "Lexington~w3~Sportszone — Active Minds, Active Bodies":{s:"open"},
+    "Lexington~w3~USTA Tennis in the Parks":{s:"open",d:"Seats available."},
+    "Lexington~w2~Youth Summer Tennis Clinic":{s:"open",d:"16 seats."},
+    "Lexington~w2~Summer In-Town 3v3 Basketball League":{s:"open"},
+    "Lexington~w9~radKids (with Lexington Police)":{s:"open",d:"New participants only."},
+    "Lexington~w4~Buildwave — Summer Clinic":{s:"open"},
+    "Lexington~w8~Chess — Summer Clinics":{s:"open"},
+    "Lexington~w1~Dungeons & Dragons Summer Adventures":{s:"full",d:"Jun 22–26 full (both sessions); an Aug 17–21 session may have space."},
+    "Lexington~w4~FC Academy — Stop Motion Animation":{s:"open"},
+    "Lexington~w6~FC Academy — Filmmaking 101":{s:"open"},
+    "Lexington~w2~Kidcreate — Kpop, Anime & Gaming":{s:"open"},
+    "Lexington~w5~Kids' Test Kitchen — Summer":{s:"open"},
+    "Belmont~w3~Belmont Youth Archery (Series A)":{s:"open",d:"5 seats."},
+    "Belmont~w9~Belmont Youth Archery (Series B)":{s:"open",d:"8 seats."},
+    "Belmont~w3~Youth Archery (Thu evenings ×4)":{s:"open",d:"5 seats."},
+    "Belmont~w8~Youth Archery (Thu evenings ×4)":{s:"open",d:"8 seats."},
+    "Belmont~w1~Tennis Clinic":{s:"open"},
+    "Belmont~w1~Basketball Clinic":{s:"open"},
+    "Belmont~w3~Swim Lessons — Summer":{s:"open"},
+    "Belmont~w3~Summer Theatre Program":{s:"open"},
+    "Belmont~w3~Karate Juniors":{s:"open"},
+    "Belmont~w4~Parkour Summer Clinic":{s:"open",d:"14 seats."},
+    "Belmont~w4~Beginner Synchronized Swimming":{s:"open"},
+    "Belmont~w6~Volleyball Summer":{s:"open"},
+    "Belmont~w6~Flag Football Clinic":{s:"open"}
+  };
+  function getStatus(a){
+    if(statusMap[a.sig]) return statusMap[a.sig];
+    if(a.town==="Reading"){ const t9=/Quickstart Tennis \(9–11\)/.test(a.name);
+      return {s:"unknown",d:"Reading's myrec hides availability from logged-out visitors — log in at readingma.myrec.com to check."+(t9?" (Also verify this 9–11 session exists — it wasn't found on the listed program page.)":"")}; }
+    return {s:"unknown",d:"Status not verified."};
+  }
+  function statusBadge(a){ const s=getStatus(a).s;
+    if(s==="full") return '<span class="full-badge">FULL</span>';
+    if(s==="open") return '<span class="open-badge">OPEN</span>';
+    return '<span class="chk-badge" title="Availability not shown publicly — log in to check">CHECK</span>'; }
+  function availabilityText(a){ const st=getStatus(a);
+    const lbl=st.s==="full"?"🔴 Full":st.s==="open"?"🟢 Open":"⚪ Not shown publicly — log in to check";
+    return lbl+(st.d?" · "+st.d:"")+` <span style="color:#9aa89d">(checked May 31, 2026)</span>`; }
+
   function descKey(a){
     let n=a.name;
     if(n.includes(':')) n=n.split(':')[0];
@@ -700,7 +783,7 @@
       <div class="detail-pills">
         <span class="catpill ${a.cat}">${catName[a.cat]}</span>
         <span class="townpill ${a.town}">${a.town}</span>
-        ${a.full?'<span class="full-badge">FULL</span>':''}
+        ${statusBadge(a)}
       </div>
       <h2>${a.name}</h2>
       <div class="msub">${a.line}</div>
@@ -712,6 +795,7 @@
         <dt>Time</dt><dd>${a.time}</dd>
         <dt>Location</dt><dd>${a.loc}</dd>
         <dt>Fee</dt><dd>${feeTxt}</dd>
+        <dt>Availability</dt><dd>${availabilityText(a)}</dd>
         <dt>Soccer-rest</dt><dd>${restHtml}</dd>
         <dt>Good for</dt><dd>${fitsTxt}</dd>
       </dl>
