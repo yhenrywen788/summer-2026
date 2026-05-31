@@ -102,6 +102,22 @@
   .full-badge{font-size:.58rem;font-weight:700;color:#fff;background:#c0392b;padding:2px 6px;border-radius:5px;}
   .open-badge{font-size:.58rem;font-weight:700;color:#26604f;background:rgba(47,125,106,.18);padding:2px 6px;border-radius:5px;}
   .chk-badge{font-size:.58rem;font-weight:700;color:#7a6a3a;background:rgba(224,169,46,.20);padding:2px 6px;border-radius:5px;cursor:help;}
+  /* activity graphics + video */
+  .card-thumb{height:56px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1.9rem;margin-bottom:10px;}
+  .card-thumb.sport{background:linear-gradient(135deg,rgba(63,107,67,.20),rgba(224,169,46,.12));}
+  .card-thumb.tech{background:linear-gradient(135deg,rgba(91,138,166,.22),rgba(91,138,166,.07));}
+  .card-thumb.art{background:linear-gradient(135deg,rgba(201,111,63,.20),rgba(201,111,63,.07));}
+  .card-thumb.mind{background:linear-gradient(135deg,rgba(125,90,125,.20),rgba(125,90,125,.07));}
+  .media{margin:16px 0 4px;}
+  .media-banner{height:84px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:3rem;margin-bottom:12px;}
+  .media-banner.sport{background:linear-gradient(135deg,rgba(63,107,67,.22),rgba(224,169,46,.14));}
+  .media-banner.tech{background:linear-gradient(135deg,rgba(91,138,166,.24),rgba(91,138,166,.08));}
+  .media-banner.art{background:linear-gradient(135deg,rgba(201,111,63,.22),rgba(201,111,63,.08));}
+  .media-banner.mind{background:linear-gradient(135deg,rgba(125,90,125,.22),rgba(125,90,125,.08));}
+  .vid-wrap{position:relative;padding-top:56.25%;border-radius:10px;overflow:hidden;background:#000;}
+  .vid-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0;}
+  .vid-link{display:inline-block;margin-top:8px;font-size:.84rem;font-weight:600;color:var(--clay);text-decoration:none;}
+  .vid-link:hover{text-decoration:underline;}
   .card-actions{margin-top:11px;}
   .star-btn{width:100%;font-family:inherit;font-size:.78rem;font-weight:700;padding:7px 8px;border-radius:8px;cursor:pointer;border:1.5px solid var(--sun);background:transparent;color:#9a7a18;transition:all .15s ease;}
   .star-btn:hover{background:rgba(224,169,46,.16);}
@@ -471,6 +487,7 @@
         <button class="pick-btn b8 ${on8?'on':''}" ${can8?'':'disabled'} onclick="toggle('8','${a.wk}','${a._id}')">${on8?'✓ 8yo':'Pick 8yo'}</button>
       </div>` : '';
     return `<div class="card ${a.cat}${selClass}" id="card_${a._id}" style="cursor:pointer" onclick="cardClick(event,'${a._id}')" title="Click for full details">
+      <div class="card-thumb ${a.cat}">${actIcon(a)}</div>
       <div class="card-top"><span class="catpill ${a.cat}">${catName[a.cat]}</span><span class="townpill ${a.town}">${a.town}</span><span class="timetag">${a.time}</span></div>
       <h3>${a.name} ${statusBadge(a)}</h3>
       <div class="sportline">${a.line}</div>
@@ -733,6 +750,64 @@
     const lbl=st.s==="full"?"🔴 Full":st.s==="open"?"🟢 Open":"⚪ Not shown publicly — log in to check";
     return lbl+(st.d?" · "+st.d:"")+` <span style="color:#9aa89d">(checked May 31, 2026)</span>`; }
 
+  // Activity graphic (emoji) + a real kid-friendly YouTube video per activity type.
+  const actMeta={
+    tennis:{i:"🎾",v:"KCaxZaIZYs8"}, basketball:{i:"🏀",v:"a0_pdADmv4Q"}, archery:{i:"🏹",v:"u3UEHCRt87U"},
+    badminton:{i:"🏸",v:"N0p5kfemVb4"}, volleyball:{i:"🏐",v:"jxhuopeNAHE"}, baseball:{i:"⚾",v:"PFnq0nR4CoQ"},
+    football:{i:"🏈",v:"N80PT8v9v78"}, lacrosse:{i:"🥍",v:"010lrw6sTMo"}, fieldhockey:{i:"🏑",v:"cMtgAMtTMdA"},
+    nerf:{i:"🎯",v:"KzRhehKHXbM"}, parkour:{i:"🤸",v:"I4VqxCpGbnU"}, swimming:{i:"🏊",v:"h0XvfysKzks"},
+    synchro:{i:"🤽",v:"CtwrFaJtsZQ"}, karate:{i:"🥋",v:"sRNQulicqo4"}, multisport:{i:"🏅",v:"-xn9zvo0mvY"},
+    track:{i:"🏃",v:"Akop0t69dYw"}, chess:{i:"♟️",v:"YdnvlntAQH8"}, lego:{i:"🧱",v:"FynqkwBzy_I"},
+    robotics:{i:"🤖",v:"3g0W9OVJSsE"}, coding:{i:"💻",v:"rNIM1fzJ8u0"}, printing3d:{i:"🖨️",v:"HlvK6DLwCz4"},
+    woodworking:{i:"🪚",v:"FfB-m2OYF9g"}, science:{i:"🔬",v:"H4OZfAyjcp4"}, art:{i:"🎨",v:"BJFzclzaSKI"},
+    cooking:{i:"🍳",v:"yLhy5hcMf_g"}, theatre:{i:"🎭",v:"sTth-BZmpD4"}, filmmaking:{i:"🎬",v:"DjVkzpJ5diE"},
+    dnd:{i:"🐉",v:"ZsPrUwcjxEw"}, safety:{i:"🛡️",v:"q7XFPzw8OQM"}, slime:{i:"🫧",v:"jWqNK-BGRz8"},
+    electronics:{i:"🔌",v:"PduJnQkbkvY"}
+  };
+  function classify(a){
+    const n=(a.name+" "+(a.line||"")).toLowerCase();
+    if(/super sports|sportszone|multi-?sport|sports adventure|all[- ]sport/.test(n)) return "multisport";
+    if(/archery/.test(n)) return "archery";
+    if(/badminton/.test(n)) return "badminton";
+    if(/volleyball/.test(n)) return "volleyball";
+    if(/lacrosse/.test(n)) return "lacrosse";
+    if(/field hockey/.test(n)) return "fieldhockey";
+    if(/baseball|blue sox/.test(n)) return "baseball";
+    if(/football/.test(n)) return "football";
+    if(/basketball|hoop|3v3|3on3/.test(n)) return "basketball";
+    if(/tennis/.test(n)) return "tennis";
+    if(/nerf/.test(n)) return "nerf";
+    if(/parkour|ninja/.test(n)) return "parkour";
+    if(/synchro/.test(n)) return "synchro";
+    if(/swim/.test(n)) return "swimming";
+    if(/karate/.test(n)) return "karate";
+    if(/track/.test(n)) return "track";
+    if(/chess/.test(n)) return "chess";
+    if(/dungeons|dragons/.test(n)) return "dnd";
+    if(/theat(er|re)/.test(n)) return "theatre";
+    if(/film|stop motion|animation/.test(n)) return "filmmaking";
+    if(/kitchen|cooking/.test(n)) return "cooking";
+    if(/slime/.test(n)) return "slime";
+    if(/3d print/.test(n)) return "printing3d";
+    if(/woodwork/.test(n)) return "woodworking";
+    if(/robot|snapology|circuit makers/.test(n)) return "robotics";
+    if(/app invent|coding/.test(n)) return "coding";
+    if(/electronics/.test(n)) return "electronics";
+    if(/lego|buildwave|build|right brain/.test(n)) return "lego";
+    if(/science|experiment|med school|hogwarts|wicked cool|stem|active minds/.test(n)) return "science";
+    if(/art|masterpiece|kidcreate|drawing|paint/.test(n)) return "art";
+    if(/radkids|safety/.test(n)) return "safety";
+    return a.cat==="tech"?"science":a.cat==="art"?"art":a.cat==="mind"?"chess":"multisport";
+  }
+  function actIcon(a){ return actMeta[classify(a)].i; }
+  function mediaBlock(a){
+    const m=actMeta[classify(a)]; const banner=`<div class="media-banner ${a.cat}">${m.i}</div>`;
+    const video = m.v
+      ? `<div class="vid-wrap"><iframe src="https://www.youtube-nocookie.com/embed/${m.v}?rel=0" title="What is ${a.name}?" loading="lazy" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div><a class="vid-link" href="https://www.youtube.com/watch?v=${m.v}" target="_blank" rel="noopener">▶ Watch on YouTube</a>`
+      : `<a class="vid-link" href="https://www.youtube.com/results?search_query=${encodeURIComponent(a.name+' for kids')}" target="_blank" rel="noopener">▶ Search YouTube</a>`;
+    return `<div class="media">${banner}${video}</div>`;
+  }
+
   function descKey(a){
     let n=a.name;
     if(n.includes(':')) n=n.split(':')[0];
@@ -787,6 +862,7 @@
       </div>
       <h2>${a.name}</h2>
       <div class="msub">${a.line}</div>
+      ${mediaBlock(a)}
       ${descHtml}
       ${srcHtml}
       <dl class="detail-meta">
