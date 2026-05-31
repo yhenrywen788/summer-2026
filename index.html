@@ -118,6 +118,35 @@
   .vid-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0;}
   .vid-link{display:inline-block;margin-top:8px;font-size:.84rem;font-weight:600;color:var(--clay);text-decoration:none;}
   .vid-link:hover{text-decoration:underline;}
+  /* Kids' View */
+  .kid-toggle{font-family:inherit;font-weight:700;font-size:.9rem;padding:10px 18px;border-radius:10px;cursor:pointer;border:2px solid var(--moss-deep);background:transparent;color:var(--moss-deep);transition:all .15s ease;}
+  .kid-toggle:hover{background:var(--moss-deep);color:var(--paper);}
+  .kid-only{display:none;}
+  body.kid-mode .planner-only{display:none!important;}
+  body.kid-mode .kid-only{display:block;}
+  .kid-head{position:relative;z-index:2;max-width:1280px;margin:18px auto 0;padding:0 32px;}
+  .kid-head-top{display:flex;align-items:center;gap:16px;flex-wrap:wrap;justify-content:space-between;}
+  .kid-head h2{font-family:'Fraunces',serif;font-weight:900;color:var(--moss-deep);font-size:clamp(1.4rem,3.5vw,2.1rem);}
+  .kid-cat-row{margin-top:16px;}
+  .kid-cat-row .chip{font-size:.95rem;padding:9px 18px;}
+  .kid-fav-row{margin-top:16px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+  .kid-fav-row #kidLikeCount{font-weight:700;color:var(--clay);}
+  .kid-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:14px;}
+  .kid-cat-head{font-family:'Fraunces',serif;font-weight:900;color:var(--moss-deep);font-size:1.45rem;margin:26px 0 12px;display:flex;align-items:center;gap:10px;}
+  .kid-tile{position:relative;border:1px solid var(--line);border-radius:16px;padding:20px 12px 16px;text-align:center;cursor:pointer;background:var(--paper-2);transition:transform .15s ease,box-shadow .15s ease;}
+  .kid-tile:hover{transform:translateY(-4px);box-shadow:0 10px 24px var(--shadow);}
+  .kid-tile .k-emoji{font-size:3.1rem;line-height:1;}
+  .kid-tile .k-label{font-family:'Fraunces',serif;font-weight:700;margin-top:10px;font-size:1.02rem;color:var(--ink);line-height:1.1;}
+  .kid-tile .k-count{font-size:.72rem;color:#7a8a7d;margin-top:4px;}
+  .kid-tile .k-heart{position:absolute;top:8px;right:9px;font-size:1.25rem;}
+  .kid-tile.liked{outline:3px solid var(--clay);outline-offset:1px;background:rgba(201,111,63,.07);}
+  .kid-tile.sport::after,.kid-tile.tech::after,.kid-tile.art::after,.kid-tile.mind::after{content:"";position:absolute;top:0;left:0;right:0;height:6px;border-radius:16px 16px 0 0;}
+  .kid-tile.sport::after{background:var(--moss);}.kid-tile.tech::after{background:var(--sky);}
+  .kid-tile.art::after{background:var(--clay);}.kid-tile.mind::after{background:var(--plum);}
+  .kc-item{padding:8px 12px;border:1px solid var(--line);border-radius:9px;margin-bottom:6px;font-size:.86rem;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .k-like-btn{width:100%;font-family:inherit;font-size:1rem;font-weight:700;padding:12px;border-radius:12px;cursor:pointer;border:2px solid var(--clay);background:transparent;color:var(--clay);margin:14px 0;transition:all .15s ease;}
+  .k-like-btn.on{background:var(--clay);color:#fff;}
+  .k-like-btn:hover{filter:brightness(1.04);}
   .card-actions{margin-top:11px;}
   .star-btn{width:100%;font-family:inherit;font-size:.78rem;font-weight:700;padding:7px 8px;border-radius:8px;cursor:pointer;border:1.5px solid var(--sun);background:transparent;color:#9a7a18;transition:all .15s ease;}
   .star-btn:hover{background:rgba(224,169,46,.16);}
@@ -209,11 +238,29 @@
     <span><span class="swatch sw8"></span> 8-year-old</span>
   </div>
 </header>
-<div class="toolbar">
+<div class="toolbar planner-only">
   <button id="henryBtn" class="henry-btn">★ Henry's Shortlist <span class="hc" id="henryCount">0</span></button>
+  <button id="kidViewBtn" class="kid-toggle">👦 Kids’ View</button>
 </div>
-<div id="shareBanner" class="share-banner" style="display:none"></div>
-<div class="controls">
+<div id="shareBanner" class="share-banner planner-only" style="display:none"></div>
+<div class="kid-only kid-head" id="kidHead">
+  <div class="kid-head-top">
+    <h2 id="kidTitle">What looks fun this summer? Tap the ones you like! 🎉</h2>
+    <button id="plannerBtn" class="kid-toggle">📅 Back to planner</button>
+  </div>
+  <div class="chips kid-cat-row" id="kidCatChips">
+    <button class="chip active" data-kidcat="all">⭐ All</button>
+    <button class="chip" data-kidcat="sport">⚽ Sports</button>
+    <button class="chip" data-kidcat="tech">🔬 Science &amp; Tech</button>
+    <button class="chip" data-kidcat="art">🎨 Art</button>
+    <button class="chip" data-kidcat="mind">🧠 Brain Games</button>
+  </div>
+  <div class="kid-fav-row">
+    <span id="kidLikeCount">0 favorites</span>
+    <button id="kidShare" class="henry-btn">❤️ Show Dad my favorites</button>
+  </div>
+</div>
+<div class="controls planner-only">
   <div class="ctrl-group"><span class="ctrl-label">Category</span>
     <div class="chips" id="catChips">
       <button class="chip active" data-cat="all">All</button>
@@ -248,11 +295,11 @@
   </div>
 </div>
 <main id="board"></main>
-<footer>
+<footer class="planner-only">
   Built from live town Recreation program pages (Reading, Winchester, Lexington, Belmont; dates confirmed May 2026). Soccer, outdoor/nature adventure camps, and generic day camps excluded. Lexington programs are residents-first (non-resident pricing shown); Belmont archery meets Thursday evenings in Watertown (counted under its start week). Selections live in this page only — use “View / copy plan” or the share link to keep them. Re-confirm dates, fees, and grade eligibility on each town's myrec portal before registering. Cost tally uses the lower (resident) fee where a range is shown and is approximate. Open/full status was checked May 31, 2026 where the portal shows it: 🟢 OPEN and 🔴 FULL are confirmed; ⚪ CHECK means availability isn't public (Reading's myrec and the Viking/Minuteman vendor pages hide live seats) — log in to confirm. Status changes daily; re-confirm before registering.
 </footer>
 
-<div class="summary">
+<div class="summary planner-only">
   <div class="stat">Shortlisted: <b id="cntShort">0</b></div>
   <div class="stat">10yo picks: <b id="cnt10">0</b>/11 wks</div>
   <div class="stat">8yo picks: <b id="cnt8">0</b>/11 wks</div>
@@ -280,6 +327,10 @@
 
 <div class="modal-bg" id="henryBg">
   <div class="modal" id="henryModal"></div>
+</div>
+
+<div class="modal-bg" id="kidBg">
+  <div class="modal" id="kidModal"></div>
 </div>
 
 <script>
@@ -443,6 +494,7 @@
   // shortlist: set of activity ids the user is considering (stage 1)
   let shortlist={};            // shortlist[id]=true
   let viewMode='all';          // 'all' = browse everything, 'short' = only shortlisted
+  let kidMode=false, kidCat='all', kidLikes={}, sharedKid=false, kidDetail=null;
   function isShort(id){return !!shortlist[id];}
   function shortCountWk(wk){return activities.filter(a=>a.wk===wk&&isShort(a._id)).length;}
 
@@ -937,7 +989,83 @@
     updateHenryCount();
   })();
 
-  render(); updateSummary();
+  // ---- Kids' View: category-grouped, deduped by activity type, tap to favorite ----
+  const KIDCATS=[["sport","⚽ Sports"],["tech","🔬 Science & Tech"],["art","🎨 Art"],["mind","🧠 Brain Games"]];
+  const kidLabel={tennis:"Tennis",basketball:"Basketball",archery:"Archery",badminton:"Badminton",volleyball:"Volleyball",baseball:"Baseball",football:"Flag Football",lacrosse:"Lacrosse",fieldhockey:"Field Hockey",nerf:"Nerf Battles",parkour:"Ninja & Parkour",swimming:"Swimming",synchro:"Synchro Swim",karate:"Karate",multisport:"Multi-Sport",track:"Track & Field",chess:"Chess",lego:"LEGO Building",robotics:"Robots",coding:"Coding",printing3d:"3D Printing",woodworking:"Woodworking",science:"Science Lab",art:"Art Studio",cooking:"Cooking",theatre:"Theater",filmmaking:"Movie Making",dnd:"Dungeons & Dragons",safety:"Safety Skills",slime:"Slime Lab",electronics:"Electronics"};
+  function buildKidTypes(){
+    const map={};
+    activities.forEach(a=>{ const t=classify(a); if(!map[t]){const m=actMeta[t]; map[t]={type:t,cat:a.cat,icon:m.i,vid:m.v,label:kidLabel[t]||t,camps:[]};} map[t].camps.push(a); });
+    return Object.values(map);
+  }
+  function persistKid(){ try{ localStorage.setItem('kidLikes_v1', JSON.stringify(Object.keys(kidLikes))); }catch(e){} updateKidBar(); }
+  function updateKidBar(){ const n=Object.keys(kidLikes).length; const el=document.getElementById('kidLikeCount'); if(el) el.textContent=n+" favorite"+(n===1?"":"s"); }
+  function renderKids(){
+    const board=document.getElementById('board'); board.innerHTML='';
+    const types=buildKidTypes();
+    KIDCATS.forEach(([cat,label])=>{
+      if(kidCat!=='all'&&kidCat!==cat) return;
+      const ts=types.filter(t=>t.cat===cat).sort((a,b)=>a.label.localeCompare(b.label));
+      if(!ts.length) return;
+      const sec=document.createElement('section'); sec.className='kid-cat';
+      let html=`<div class="kid-cat-head">${label}</div><div class="kid-grid">`;
+      ts.forEach(t=>{ const liked=!!kidLikes[t.type];
+        html+=`<div class="kid-tile ${t.cat} ${liked?'liked':''}" onclick="openKidType('${t.type}')">
+          <div class="k-heart">${liked?'❤️':'🤍'}</div>
+          <div class="k-emoji">${t.icon}</div>
+          <div class="k-label">${t.label}</div>
+          <div class="k-count">${t.camps.length} camp${t.camps.length>1?'s':''}</div>
+        </div>`;
+      });
+      html+='</div>'; sec.innerHTML=html; board.appendChild(sec);
+    });
+    updateKidBar();
+  }
+  window.openKidType=function(type){
+    kidDetail=type;
+    const t=buildKidTypes().find(x=>x.type===type); if(!t) return;
+    const liked=!!kidLikes[type];
+    const wkOrder=weeks.map(w=>w.key);
+    const camps=t.camps.slice().sort((a,b)=>wkOrder.indexOf(a.wk)-wkOrder.indexOf(b.wk));
+    const list=camps.map(a=>`<div class="kc-item">${statusBadge(a)} <b>${a.name}</b> — ${a.town} · ${a.date}</div>`).join('');
+    const video=t.vid?`<div class="vid-wrap"><iframe src="https://www.youtube-nocookie.com/embed/${t.vid}?rel=0" title="What is ${t.label}?" loading="lazy" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`:'';
+    document.getElementById('kidModal').innerHTML=`
+      <div class="media-banner ${t.cat}" style="font-size:4rem;height:120px">${t.icon}</div>
+      <h2>${t.label}</h2>
+      ${video}
+      <button class="k-like-btn ${liked?'on':''}" onclick="toggleKidLike('${type}')">${liked?'❤️ You like this!':'🤍 I like this!'}</button>
+      <div class="msub" style="margin-bottom:8px">Where you can do it (${camps.length}):</div>
+      ${list}
+      <div class="modal-close"><button class="mc-done" onclick="document.getElementById('kidBg').classList.remove('show')">Close</button></div>`;
+    document.getElementById('kidBg').classList.add('show');
+  };
+  window.toggleKidLike=function(type){ if(kidLikes[type]) delete kidLikes[type]; else kidLikes[type]=true; persistKid(); if(kidDetail===type) openKidType(type); renderKids(); };
+  function setKid(on){ kidMode=on; document.body.classList.toggle('kid-mode',on); if(on) renderKids(); else render(); window.scrollTo(0,0); }
+  document.getElementById('kidViewBtn').addEventListener('click',()=>setKid(true));
+  document.getElementById('plannerBtn').addEventListener('click',()=>{ if(location.hash) location.hash=''; setKid(false); });
+  document.getElementById('kidCatChips').addEventListener('click',e=>{const b=e.target.closest('.chip'); if(!b)return; [...e.currentTarget.children].forEach(c=>c.classList.remove('active')); b.classList.add('active'); kidCat=b.dataset.kidcat; renderKids();});
+  document.getElementById('kidBg').addEventListener('click',e=>{if(e.target.id==='kidBg')document.getElementById('kidBg').classList.remove('show');});
+  document.getElementById('kidShare').addEventListener('click',()=>{
+    const keys=Object.keys(kidLikes);
+    if(!keys.length){ alert('Tap a few activities you like first, then share! 🌟'); return; }
+    const link=location.origin+location.pathname+'#kf='+slEncode(keys);
+    const b=document.getElementById('kidShare');
+    (navigator.clipboard?navigator.clipboard.writeText(link):Promise.reject()).then(()=>{b.textContent='✅ Link copied — send to Dad!';setTimeout(()=>b.textContent='❤️ Show Dad my favorites',2200);}).catch(()=>prompt('Copy this link and send it to Dad:',link));
+  });
+
+  (function initKid(){
+    const h=location.hash;
+    const kf=h.match(/kf=([^&]+)/);
+    if(kf){ const arr=slDecode(kf[1]); if(arr){ arr.forEach(t=>{kidLikes[t]=true;}); sharedKid=true; } }
+    else { try{ const raw=localStorage.getItem('kidLikes_v1'); if(raw){ JSON.parse(raw).forEach(t=>{kidLikes[t]=true;}); } }catch(e){} }
+    if(/#kids/.test(h)||kf){ kidMode=true; }
+    if(sharedKid){
+      const tt=document.getElementById('kidTitle'); if(tt) tt.textContent="Your kids' picks 💛 — tap any to see the camps";
+    }
+  })();
+
+  document.body.classList.toggle('kid-mode',kidMode);
+  if(kidMode) renderKids(); else render();
+  updateSummary();
 </script>
 </body>
 </html>
