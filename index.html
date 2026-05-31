@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reading Rec — Summer 2026 Planner (Non-Soccer)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,900&family=Outfit:wght@300;400;500;600;700&display=swap');
+  :root{--ink:#1a2e1f;--paper:#f4efe4;--paper-2:#ebe3d2;--moss:#3f6b43;--moss-deep:#2c4a2f;
+    --clay:#c96f3f;--sun:#e0a92e;--sky:#5b8aa6;--plum:#7d5a7d;--line:#cbbfa6;--shadow:rgba(44,74,47,.18);
+    --boy10:#3f6b43;--boy8:#5b8aa6;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Outfit',sans-serif;background:
+    radial-gradient(circle at 12% 8%, rgba(224,169,46,.10), transparent 40%),
+    radial-gradient(circle at 88% 92%, rgba(91,138,166,.10), transparent 42%),var(--paper);
+    color:var(--ink);line-height:1.5;padding:0 0 120px;}
+  .grain{position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.4;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.045'/%3E%3C/svg%3E");}
+  header{position:relative;z-index:2;padding:48px 32px 22px;max-width:1280px;margin:0 auto;}
+  .eyebrow{font-size:.78rem;letter-spacing:.32em;text-transform:uppercase;color:var(--clay);font-weight:600;margin-bottom:14px;}
+  h1{font-family:'Fraunces',serif;font-weight:900;font-size:clamp(2.1rem,5vw,3.6rem);line-height:.98;letter-spacing:-.02em;color:var(--moss-deep);max-width:18ch;}
+  h1 em{font-style:italic;color:var(--clay);}
+  .sub{margin-top:16px;font-size:1.02rem;max-width:66ch;color:#4a5a4d;}
+  .who-key{margin-top:16px;display:flex;gap:18px;flex-wrap:wrap;font-size:.85rem;font-weight:600;}
+  .who-key span{display:flex;align-items:center;gap:7px;}
+  .swatch{width:14px;height:14px;border-radius:4px;}
+  .sw10{background:var(--boy10);}.sw8{background:var(--boy8);}
+  .controls{position:relative;z-index:2;max-width:1280px;margin:22px auto 0;padding:0 32px;display:flex;flex-wrap:wrap;gap:22px;align-items:flex-end;}
+  .ctrl-group{display:flex;flex-direction:column;gap:8px;}
+  .ctrl-label{font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:#7a8a7d;font-weight:600;}
+  .chips{display:flex;gap:8px;flex-wrap:wrap;}
+  .chip{font-family:inherit;font-size:.84rem;font-weight:500;padding:7px 15px;border-radius:100px;cursor:pointer;border:1.5px solid var(--line);background:transparent;color:var(--ink);transition:all .18s ease;}
+  .chip:hover{border-color:var(--moss);transform:translateY(-1px);}
+  .chip.active{background:var(--moss-deep);color:var(--paper);border-color:var(--moss-deep);}
+  main{position:relative;z-index:2;max-width:1280px;margin:30px auto 0;padding:0 32px;}
+  .week{margin-bottom:28px;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:rgba(255,255,255,.30);}
+  .week-head{display:flex;align-items:center;gap:14px;padding:15px 22px;background:var(--moss-deep);color:var(--paper);flex-wrap:wrap;}
+  .week-head .wk-num{font-family:'Fraunces',serif;font-weight:900;font-size:1rem;background:var(--sun);color:#3a2e0a;width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none;}
+  .week-head h2{font-family:'Fraunces',serif;font-weight:600;font-size:1.2rem;letter-spacing:-.01em;}
+  .week-head .dates{font-size:.85rem;opacity:.9;margin-left:auto;font-weight:600;}
+  .week-pick{display:flex;gap:10px;padding:12px 22px 0;flex-wrap:wrap;}
+  .pickpill{font-size:.8rem;font-weight:600;padding:6px 12px;border-radius:9px;display:flex;align-items:center;gap:8px;flex:1 1 240px;min-width:0;}
+  .pickpill.p10{background:rgba(63,107,67,.12);color:var(--moss-deep);border:1px dashed rgba(63,107,67,.4);}
+  .pickpill.p8{background:rgba(91,138,166,.12);color:#2f5468;border:1px dashed rgba(91,138,166,.45);}
+  .pickpill .lbl{font-weight:700;white-space:nowrap;}
+  .pickpill .val{font-weight:500;color:#9aa89d;font-style:italic;}
+  .pickpill{align-items:flex-start;}
+  .chipwrap{display:flex;flex-wrap:wrap;gap:5px;flex:1;}
+  .selchip{display:inline-flex;align-items:center;gap:5px;font-size:.72rem;font-weight:600;padding:3px 6px 3px 9px;border-radius:7px;background:rgba(255,255,255,.6);}
+  .selchip small{font-weight:500;opacity:.7;}
+  .selchip.sc10{color:var(--moss-deep);box-shadow:inset 0 0 0 1px rgba(63,107,67,.4);}
+  .selchip.sc8{color:#2f5468;box-shadow:inset 0 0 0 1px rgba(91,138,166,.45);}
+  .selchip.conf{background:rgba(201,111,63,.18);box-shadow:inset 0 0 0 1px var(--clay);}
+  .selchip.conf::before{content:'⚠ ';}
+  .selchip button{border:none;background:rgba(0,0,0,.1);border-radius:5px;width:16px;height:16px;line-height:1;cursor:pointer;color:inherit;font-size:.75rem;}
+  .selchip button:hover{background:rgba(0,0,0,.2);}
+  .pickpill .clr{margin-left:auto;cursor:pointer;border:none;background:rgba(0,0,0,.08);border-radius:6px;width:20px;height:20px;line-height:1;font-size:.8rem;color:inherit;flex:none;}
+  .pickpill .clr:hover{background:rgba(0,0,0,.16);}
+  .week-body{padding:14px 22px 22px;}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(262px,1fr));gap:14px;}
+  .card{position:relative;background:var(--paper-2);border:1px solid var(--line);border-radius:12px;padding:14px 15px 13px;transition:transform .18s ease,box-shadow .18s ease;overflow:hidden;}
+  .card::before{content:"";position:absolute;top:0;left:0;width:5px;height:100%;}
+  .card.sport::before{background:var(--moss);}.card.tech::before{background:var(--sky);}
+  .card.art::before{background:var(--clay);}.card.mind::before{background:var(--plum);}
+  .card.sel10{outline:3px solid var(--boy10);outline-offset:1px;}
+  .card.sel8{outline:3px solid var(--boy8);outline-offset:1px;}
+  .card.sel10.sel8{outline:3px solid;outline-color:var(--boy10);box-shadow:0 0 0 6px rgba(91,138,166,.35);}
+  .card:hover{transform:translateY(-3px);box-shadow:0 8px 20px var(--shadow);}
+  .card-top{display:flex;flex-wrap:wrap;justify-content:flex-start;align-items:center;gap:6px;margin-bottom:7px;}
+  .card-top .timetag{margin-left:auto;}
+  .catpill{font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;font-weight:700;padding:3px 8px;border-radius:5px;}
+  .catpill.sport{background:rgba(63,107,67,.15);color:var(--moss-deep);}
+  .catpill.tech{background:rgba(91,138,166,.18);color:#2f5468;}
+  .catpill.art{background:rgba(201,111,63,.18);color:#9a4a22;}
+  .catpill.mind{background:rgba(125,90,125,.18);color:#5a3a5a;}
+  .townpill{font-size:.6rem;letter-spacing:.06em;text-transform:uppercase;font-weight:700;padding:3px 8px;border-radius:5px;background:rgba(0,0,0,.06);color:#5a6a5d;}
+  .townpill.Reading{background:rgba(63,107,67,.16);color:var(--moss-deep);}
+  .townpill.Lexington{background:rgba(125,90,125,.18);color:#5a3a5a;}
+  .townpill.Belmont{background:rgba(201,111,63,.18);color:#9a4a22;}
+  .townpill.Gordon{background:rgba(91,138,166,.20);color:#2f5468;}
+  .timetag{font-size:.62rem;letter-spacing:.05em;font-weight:700;color:#5a6a5d;background:rgba(0,0,0,.05);padding:3px 7px;border-radius:5px;}
+  .towntag{font-size:.58rem;letter-spacing:.04em;font-weight:700;text-transform:uppercase;padding:3px 7px;border-radius:5px;}
+  .tt-Reading{background:rgba(63,107,67,.16);color:var(--moss-deep);}
+  .tt-Lexington{background:rgba(125,90,125,.16);color:#5a3a5a;}
+  .tt-Belmont{background:rgba(201,111,63,.16);color:#9a4a22;}
+  .tt-Gordon{background:rgba(91,138,166,.16);color:#2f5468;}
+  .card-top{flex-wrap:wrap;}
+  .card h3{font-family:'Fraunces',serif;font-weight:600;font-size:1rem;line-height:1.15;color:var(--ink);margin-bottom:3px;}
+  .card .sportline{font-size:.72rem;letter-spacing:.03em;text-transform:uppercase;color:var(--clay);font-weight:600;margin-bottom:8px;}
+  .card .meta{font-size:.8rem;color:#4a5a4d;display:flex;flex-direction:column;gap:3px;}
+  .card .meta div{display:flex;gap:6px;align-items:flex-start;}
+  .card .meta .ic{opacity:.6;width:14px;flex:none;text-align:center;}
+  .note-line{font-size:.71rem;color:#8a6a22;margin-top:6px;font-style:italic;}
+  .rest-row{display:flex;justify-content:space-between;align-items:center;margin-top:9px;gap:8px;flex-wrap:wrap;}
+  .rest-tag{font-size:.66rem;display:inline-flex;align-items:center;gap:4px;padding:4px 8px;border-radius:7px;font-weight:600;white-space:nowrap;}
+  .rest-best{background:rgba(63,107,67,.14);color:var(--moss-deep);}
+  .rest-good{background:rgba(91,138,166,.14);color:#3a5a6a;}
+  .rest-flag{background:rgba(201,111,63,.14);color:#9a4a22;}
+  .rest-na{background:rgba(125,90,125,.12);color:#5a3a5a;}
+  .full-badge{font-size:.58rem;font-weight:700;color:#fff;background:#c0392b;padding:2px 6px;border-radius:5px;}
+  .card-actions{margin-top:11px;}
+  .star-btn{width:100%;font-family:inherit;font-size:.78rem;font-weight:700;padding:7px 8px;border-radius:8px;cursor:pointer;border:1.5px solid var(--sun);background:transparent;color:#9a7a18;transition:all .15s ease;}
+  .star-btn:hover{background:rgba(224,169,46,.16);}
+  .star-btn.on{background:var(--sun);color:#3a2e0a;border-color:var(--sun);}
+  .card.shortlisted{box-shadow:0 0 0 2px var(--sun) inset;}
+  .wk-cost{font-family:'Fraunces',serif;font-weight:900;font-size:.95rem;background:var(--sun);color:#3a2e0a;padding:2px 10px;border-radius:7px;}
+  .wk-shct{font-size:.78rem;font-weight:700;background:rgba(255,255,255,.18);color:var(--paper);padding:3px 9px;border-radius:7px;}
+  .week-head .dates{margin-left:14px;}
+  .pick-btns{display:flex;gap:6px;margin-top:8px;}
+  .pick-btn{flex:1;font-family:inherit;font-size:.74rem;font-weight:700;padding:7px 4px;border-radius:8px;cursor:pointer;border:1.5px solid;background:transparent;transition:all .15s ease;}
+  .pick-btn.b10{border-color:var(--boy10);color:var(--boy10);}
+  .pick-btn.b10:hover{background:var(--boy10);color:#fff;}
+  .pick-btn.b10.on{background:var(--boy10);color:#fff;}
+  .pick-btn.b8{border-color:var(--boy8);color:#2f5468;}
+  .pick-btn.b8:hover{background:var(--boy8);color:#fff;}
+  .pick-btn.b8.on{background:var(--boy8);color:#fff;}
+  .pick-btn:disabled{opacity:.3;cursor:not-allowed;}
+  .wk-empty{font-size:.9rem;color:#9aa89d;font-style:italic;padding:6px 2px;}
+  /* summary bar */
+  .summary{position:fixed;bottom:0;left:0;right:0;z-index:50;background:var(--moss-deep);color:var(--paper);
+    padding:12px 24px;display:flex;align-items:center;gap:18px;box-shadow:0 -4px 20px rgba(0,0,0,.2);flex-wrap:wrap;}
+  .summary .stat{font-size:.85rem;}
+  .summary .stat b{font-family:'Fraunces',serif;font-size:1.05rem;}
+  .summary .sp{flex:1;}
+  .summary button{font-family:inherit;font-weight:600;font-size:.82rem;padding:9px 16px;border-radius:9px;border:none;cursor:pointer;}
+  .btn-view{background:var(--sun);color:#3a2e0a;}
+  .btn-clear{background:rgba(255,255,255,.15);color:var(--paper);}
+  .btn-view:hover{filter:brightness(1.05);}.btn-clear:hover{background:rgba(255,255,255,.25);}
+  /* modal */
+  .modal-bg{position:fixed;inset:0;z-index:100;background:rgba(26,46,31,.55);display:none;align-items:center;justify-content:center;padding:24px;}
+  .modal-bg.show{display:flex;}
+  .modal{background:var(--paper);border-radius:18px;max-width:760px;width:100%;max-height:85vh;overflow:auto;padding:30px 32px;box-shadow:0 20px 60px rgba(0,0,0,.3);}
+  .modal h2{font-family:'Fraunces',serif;font-weight:900;color:var(--moss-deep);font-size:1.6rem;margin-bottom:4px;}
+  .modal .msub{color:#7a8a7d;font-size:.9rem;margin-bottom:20px;}
+  .sumtable{width:100%;border-collapse:collapse;font-size:.86rem;}
+  .sumtable th{text-align:left;padding:9px 10px;background:var(--moss-deep);color:var(--paper);font-weight:600;font-size:.78rem;letter-spacing:.04em;}
+  .sumtable th:first-child{border-radius:8px 0 0 0;}.sumtable th:last-child{border-radius:0 8px 0 0;}
+  .sumtable td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top;}
+  .sumtable .c10{color:var(--boy10);font-weight:600;}
+  .sumtable .c8{color:#2f5468;font-weight:600;}
+  .sumtable .empty-cell{color:#b0a890;font-style:italic;font-weight:400;}
+  .modal-close{margin-top:20px;display:flex;gap:10px;}
+  .modal-close button{font-family:inherit;font-weight:600;padding:10px 18px;border-radius:9px;border:none;cursor:pointer;}
+  .mc-done{background:var(--moss-deep);color:var(--paper);}
+  .mc-copy{background:var(--sun);color:#3a2e0a;}
+  .cost-row td{font-weight:700;background:rgba(224,169,46,.12);}
+  footer{position:relative;z-index:2;max-width:1280px;margin:30px auto 0;padding:22px 32px 0;border-top:1px solid var(--line);font-size:.8rem;color:#7a8a7d;}
+  @media(max-width:600px){header{padding:34px 18px 18px;}.controls,main,footer{padding-left:18px;padding-right:18px;}}
+</style>
+</head>
+<body>
+<div class="grain"></div>
+<header>
+  <div class="eyebrow">Reading Recreation · Summer 2026 · Build Your Plan</div>
+  <h1>Pick one option <em>per boy, per week</em></h1>
+  <p class="sub">Two steps: first <b>☆ shortlist</b> the options you’re considering each week (use the filters to narrow things down). Then on any shortlisted card, tap <b>Pick 10yo</b> or <b>Pick 8yo</b> to lock in a specific choice. Each week shows its cost subtotal, and the bar at the bottom keeps a running summer total.</p>
+  <div class="who-key">
+    <span><span class="swatch sw10"></span> 10-year-old (5th grade)</span>
+    <span><span class="swatch sw8"></span> 8-year-old</span>
+  </div>
+</header>
+<div class="controls">
+  <div class="ctrl-group"><span class="ctrl-label">Category</span>
+    <div class="chips" id="catChips">
+      <button class="chip active" data-cat="all">All</button>
+      <button class="chip" data-cat="sport">Sports</button>
+      <button class="chip" data-cat="tech">Tech &amp; Science</button>
+      <button class="chip" data-cat="art">Art</button>
+      <button class="chip" data-cat="mind">Enrichment</button>
+    </div>
+  </div>
+  <div class="ctrl-group"><span class="ctrl-label">View</span>
+    <div class="chips" id="viewChips">
+      <button class="chip active" data-view="all">All options</button>
+      <button class="chip" data-view="short">★ Shortlist only</button>
+    </div>
+  </div>
+  <div class="ctrl-group"><span class="ctrl-label">Town</span>
+    <div class="chips" id="townChips">
+      <button class="chip active" data-town="all">All towns</button>
+      <button class="chip" data-town="Reading">Reading</button>
+      <button class="chip" data-town="Lexington">Lexington</button>
+      <button class="chip" data-town="Belmont">Belmont</button>
+      <button class="chip" data-town="Gordon">Gordon/Wenham</button>
+    </div>
+  </div>
+  <div class="ctrl-group"><span class="ctrl-label">Town</span>
+    <div class="chips" id="townChips">
+      <button class="chip active" data-town="all">All towns</button>
+      <button class="chip" data-town="Reading">Reading</button>
+      <button class="chip" data-town="Lexington">Lexington</button>
+      <button class="chip" data-town="Belmont">Belmont</button>
+      <button class="chip" data-town="Gordon">Gordon/La Vida</button>
+    </div>
+  </div>
+  <div class="ctrl-group"><span class="ctrl-label">Soccer-rest value</span>
+    <div class="chips" id="restChips">
+      <button class="chip active" data-rest="all">All</button>
+      <button class="chip" data-rest="best">Best rest</button>
+      <button class="chip" data-rest="good">Good variety</button>
+      <button class="chip" data-rest="flag">Higher leg load</button>
+    </div>
+  </div>
+</div>
+<main id="board"></main>
+<footer>
+  Built from live Reading Recreation program pages (dates confirmed May 2026). Soccer excluded. Lexington programs are residents-first (non-resident pricing shown); Belmont archery meets evenings in Watertown; Gordon/La Vida pricing is set at registration. Selections live in this page only (not saved) — use “View / copy plan” to keep them. Re-confirm dates, fees, and grade eligibility at readingma.myrec.com before registering. Cost tally uses the lower (resident) fee where a range is shown and is approximate. Lexington programs are residents-first (non-resident fees higher / waitlist possible). Belmont archery meets Thursday evenings in Watertown (counted under its start week). Gordon/La Vida pricing isn't shown publicly — register at camps.gordon.edu (cost shown as $0 here; not included in tally).
+</footer>
+
+<div class="summary">
+  <div class="stat">Shortlisted: <b id="cntShort">0</b></div>
+  <div class="stat">10yo picks: <b id="cnt10">0</b>/11 wks</div>
+  <div class="stat">8yo picks: <b id="cnt8">0</b>/11 wks</div>
+  <div class="stat">Summer total: <b id="cost">$0</b></div>
+  <div class="sp"></div>
+  <button class="btn-clear" id="clearAll">Clear all</button>
+  <button class="btn-view" id="viewPlan">View / copy plan</button>
+</div>
+
+<div class="modal-bg" id="modalBg">
+  <div class="modal">
+    <h2>Your summer plan</h2>
+    <div class="msub">Per-week costs and the summer total reflect your locked-in picks (not the shortlist). Resident rates; Gordon/La Vida shown as $0 since pricing is set at registration.</div>
+    <table class="sumtable" id="sumtable"></table>
+    <div class="modal-close">
+      <button class="mc-copy" id="copyPlan">Copy as text</button>
+      <button class="mc-done" id="closeModal">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const weeks = [
+    {key:"w1", num:"1", title:"Week of June 22–26", dates:"Mon–Fri"},
+    {key:"w2", num:"2", title:"Week of June 29 – July 3", dates:"Mon–Fri"},
+    {key:"w3", num:"3", title:"Week of July 6–10", dates:"Mon–Fri"},
+    {key:"w4", num:"4", title:"Week of July 13–17", dates:"Mon–Fri"},
+    {key:"w5", num:"5", title:"Week of July 20–24", dates:"Mon–Fri"},
+    {key:"w6", num:"6", title:"Week of July 27–31", dates:"Mon–Fri"},
+    {key:"w7", num:"7", title:"Week of August 3–7", dates:"Mon–Fri"},
+    {key:"w8", num:"8", title:"Week of August 10–14", dates:"Mon–Fri"},
+    {key:"w9", num:"9", title:"Week of August 17–20", dates:"Mon–Thu"},
+    {key:"w10", num:"10", title:"Week of August 24–27", dates:"Mon–Thu"},
+    {key:"w11", num:"11", title:"Aug 31 – Sep 1", dates:"Mon–Tue"},
+  ];
+  const A=(wks,o)=>wks.map(w=>({...o,wk:w}));
+  let activities=[]; let _id=0;
+
+  activities.push(...A(["w1"],{town:"Reading",cat:"sport",name:"SNL Super Sports",line:"Multi-sport camp · ages 5–12",time:"9 AM–12 PM",date:"Jun 23–26",loc:"Birch Meadow",fee:"$50–165",cost:165,fits:["8","10"],rest:"good",restLabel:"Good variety",note:"Includes soccer among many sports"}));
+  activities.push(...A(["w2"],{town:"Reading",cat:"sport",name:"SNL Super Sports",line:"Multi-sport camp · ages 5–12",time:"9 AM–12 PM",date:"Jun 29–Jul 2",loc:"Birch Meadow",fee:"$50–165",cost:165,fits:["8","10"],rest:"good",restLabel:"Good variety"}));
+  activities.push(...A(["w5"],{town:"Reading",cat:"sport",name:"SNL Super Sports",line:"Multi-sport camp · ages 5–12",time:"9 AM–12 PM",date:"Jul 20–23",loc:"RMHS Stadium",fee:"$50–165",cost:165,fits:["8","10"],rest:"good",restLabel:"Good variety"}));
+  activities.push(...A(["w8"],{town:"Reading",cat:"sport",name:"SNL Super Sports",line:"Multi-sport camp · ages 5–12",time:"9 AM–12 PM",date:"Aug 10–13",loc:"Birch Meadow",fee:"$50–165",cost:165,fits:["8","10"],rest:"good",restLabel:"Good variety"}));
+  activities.push(...A(["w10"],{town:"Reading",cat:"sport",name:"SNL Super Sports",line:"Multi-sport camp · ages 5–12",time:"9 AM–12 PM",date:"Aug 24–27",loc:"Birch Meadow",fee:"$50–165",cost:165,fits:["8","10"],rest:"good",restLabel:"Good variety"}));
+  activities.push(...A(["w11"],{town:"Reading",cat:"sport",name:"SNL Super Sports",line:"Multi-sport camp · ages 5–12",time:"9 AM–12 PM",date:"Aug 31–Sep 1",loc:"Birch Meadow",fee:"$50–83",cost:83,fits:["8","10"],rest:"good",restLabel:"Good variety"}));
+
+  const dc=[["w1","Discovery Week","Jun 24–26 (3 days)","$141",141],["w2","Reading, White & Blue","Jun 29–Jul 3","$235",235],["w3","Greatest Show on Earth","Jul 6–10","$235",235],["w4","Surf's Up","Jul 13–17","$235",235,true],["w5","Olympic Games","Jul 20–24","$235",235,true],["w6","Dodgeball Week","Jul 27–31","$235",235,true],["w7","Spirit Week","Aug 3–7","$235",235]];
+  dc.forEach(([w,theme,date,fee,cost,full])=>activities.push({wk:w,town:"Reading",cat:"sport",name:"Summer Daycation: "+theme,line:"Day camp · grades K–7",time:"9 AM–3 PM",date,loc:"Barrows Elem.",fee,cost,fits:["8","10"],rest:"good",restLabel:"Good variety",full:!!full}));
+
+  activities.push({wk:"w3",cat:"sport",name:"SNL Outdoor Basketball (Wk 1)",line:"Basketball · ages 5–12",time:"9 AM–12 PM",date:"Jul 6–9",loc:"Birch Meadow Courts",fee:"$165",cost:165,fits:["8","10"],rest:"good",restLabel:"Good variety"});
+  activities.push({wk:"w7",cat:"sport",name:"SNL Outdoor Basketball (Wk 2)",line:"Basketball · ages 5–12",time:"9 AM–12 PM",date:"Aug 3–6",loc:"Birch Meadow Courts",fee:"$165",cost:165,fits:["8","10"],rest:"good",restLabel:"Good variety"});
+  activities.push({wk:"w9",cat:"sport",name:"SNL Outdoor Basketball (Wk 3)",line:"Basketball · ages 5–12",time:"9 AM–12 PM",date:"Aug 17–20",loc:"Birch Meadow Courts",fee:"$165",cost:165,fits:["8","10"],rest:"good",restLabel:"Good variety"});
+  activities.push({wk:"w10",cat:"sport",name:"SNL Outdoor Basketball (Wk 4)",line:"Basketball · ages 5–12",time:"9 AM–12 PM",date:"Aug 24–27",loc:"Birch Meadow Courts",fee:"$165",cost:165,fits:["8","10"],rest:"good",restLabel:"Good variety"});
+
+  activities.push({wk:"w3",cat:"sport",name:"SNL Field Hockey Clinic",line:"Field hockey · ages 6–14",time:"9 AM–12 PM",date:"Jul 6–9",loc:"Birch Meadow Turf",fee:"$220",cost:220,fits:["8","10"],rest:"good",restLabel:"Good variety",note:"Needs goggles + stick"});
+  activities.push({wk:"w3",cat:"sport",name:"Nerf Battlegrounds (Session I)",line:"Active games · grades 1–5",time:"9 AM–12 PM",date:"Jul 6–9",loc:"Parker MS",fee:"$200",cost:200,fits:["8","10"],rest:"best",restLabel:"Best rest · playful"});
+  activities.push({wk:"w7",cat:"sport",name:"Nerf Battlegrounds (Session II)",line:"Active games · grades 1–5",time:"9 AM–12 PM",date:"Aug 3–6",loc:"Parker MS",fee:"$200",cost:200,fits:["8","10"],rest:"best",restLabel:"Best rest · playful"});
+  activities.push({wk:"w4",cat:"sport",name:"Junior Badminton (Session I)",line:"Badminton · grades 2–5",time:"9 AM–12 PM",date:"Jul 13–16",loc:"Parker MS",fee:"$200",cost:200,fits:["8","10"],rest:"best",restLabel:"Best rest · low impact"});
+  activities.push({wk:"w6",cat:"sport",name:"Junior Badminton (Session II)",line:"Badminton · grades 2–5",time:"9 AM–12 PM",date:"Jul 27–30",loc:"Parker MS",fee:"$200",cost:200,fits:["8","10"],rest:"best",restLabel:"Best rest · low impact"});
+  activities.push({wk:"w2",cat:"sport",name:"Bump, Set, Spike Volleyball (I)",line:"Volleyball · grades 2–5",time:"9 AM–12 PM",date:"Jun 29–Jul 2",loc:"Parker MS",fee:"$200",cost:200,fits:["8","10"],rest:"best",restLabel:"Best rest · upper body"});
+  activities.push({wk:"w8",cat:"sport",name:"Bump, Set, Spike Volleyball (II)",line:"Volleyball · grades 2–5",time:"9 AM–12 PM",date:"Aug 10–13",loc:"Birch Meadow Turf",fee:"$200",cost:200,fits:["8","10"],rest:"best",restLabel:"Best rest · upper body"});
+  activities.push({wk:"w4",cat:"sport",name:"SNL Flag Football Clinic",line:"Flag football · grades 2–8",time:"9 AM–12 PM",date:"Jul 13–16",loc:"RMHS Stadium",fee:"$220",cost:220,fits:["8","10"],rest:"flag",restLabel:"Higher leg load"});
+  activities.push({wk:"w5",cat:"sport",name:"Baseball Clinic",line:"Baseball · ages 7–12",time:"8 AM–12 PM",date:"Jul 20–23",loc:"Birch Meadow Morton",fee:"$185",cost:185,fits:["8","10"],rest:"best",restLabel:"Best rest · short bursts"});
+  activities.push({wk:"w6",cat:"sport",name:"SNL Basketball Clinic",line:"Basketball · ages 5–14",time:"9–12 / 9–3",date:"Jul 27–30",loc:"RMHS Field House",fee:"$220 / $350",cost:220,fits:["8","10"],rest:"good",restLabel:"Good variety"});
+  activities.push({wk:"w6",cat:"sport",name:"SNL Boys Lacrosse Clinic",line:"Lacrosse · ages 5–14",time:"9 AM–12 PM",date:"Jul 27–30",loc:"RMHS Stadium",fee:"$220",cost:220,fits:["8","10"],rest:"flag",restLabel:"Higher leg load",note:"Needs helmet + stick"});
+
+  const t10=[["w1","Jun 23–26 (4d)",108],["w2","Jun 29–Jul 3",135],["w3","Jul 6–10",135],["w4","Jul 13–17",135],["w5","Jul 20–24",135],["w6","Jul 27–31",135],["w7","Aug 3–7",135],["w8","Aug 10–14",135]];
+  t10.forEach(([w,date,cost])=>activities.push({wk:w,town:"Reading",cat:"sport",name:"Quickstart Tennis (9–11)",line:"Tennis · ages 9–11",time:"10:00–10:55 AM",date,loc:"Community Courts",fee:"$108–135",cost,fits:["10"],rest:"best",restLabel:"Best rest · low impact"}));
+  t10.forEach(([w,date,cost])=>activities.push({wk:w,town:"Reading",cat:"sport",name:"Quickstart Tennis (6–8)",line:"Tennis · ages 6–8",time:"9:00–9:55 AM",date,loc:"Community Courts",fee:"$108–135",cost,fits:["8"],rest:"best",restLabel:"Best rest · low impact"}));
+
+  activities.push({wk:"w2",cat:"tech",name:"Hands-On Electronics",line:"Tech · grades 4–7",time:"9 AM–12 PM",date:"Jun 29–Jul 2",loc:"Wood End Elem.",fee:"$195",cost:195,fits:["10"],rest:"na",restLabel:"Full rest · indoor",note:"10yo (5th) fits; 8yo too young"});
+  activities.push({wk:"w2",cat:"tech",name:"App Inventors",line:"Tech · grades 4–7",time:"12:45–3:45 PM",date:"Jun 29–Jul 2",loc:"Wood End Elem.",fee:"$195",cost:195,fits:["10"],rest:"na",restLabel:"Full rest · indoor",note:"Both for $365; 10yo only"});
+  activities.push({wk:"w2",cat:"art",name:"Masterpiece Makers",line:"Art · grades K–4",time:"9 AM–12 PM",date:"Jun 29–Jul 2",loc:"RMHS Field House",fee:"$245",cost:245,fits:["8","10"],rest:"na",restLabel:"Full rest · indoor",note:"K–4: confirm 5th-grader eligibility"});
+  activities.push({wk:"w3",cat:"tech",name:"100 Hands-On Science Experiments",line:"Science · grades K–5",time:"9 AM–3 PM",date:"Jul 6–10",loc:"RMHS Field House",fee:"$370",cost:370,fits:["8","10"],rest:"na",restLabel:"Full rest · indoor"});
+  activities.push({wk:"w4",cat:"tech",name:"Chess Wizards",line:"Chess · ages 5–12",time:"9–3 / 9–12 / 12–3",date:"Jul 13–17",loc:"RMHS Field House",fee:"$260–385",cost:260,fits:["8","10"],rest:"na",restLabel:"Full rest · seated"});
+  activities.push({wk:"w5",cat:"tech",name:"LEGO Challenges",line:"STEM · grades K–4",time:"9 AM–12 PM",date:"Jul 20–23",loc:"RMHS Field House",fee:"$245",cost:245,fits:["8","10"],rest:"na",restLabel:"Full rest · indoor",note:"K–4: confirm 5th-grader eligibility"});
+  activities.push({wk:"w6",cat:"mind",name:"Active Minds Academy (2–5)",line:"Enrichment · grades 2–5",time:"10:45 AM–12:45 PM",date:"Jul 27–31",loc:"Wood End Elem.",fee:"$280",cost:280,fits:["8","10"],rest:"na",restLabel:"Full rest · active learning"});
+
+  // Default town for all Reading entries defined above
+  activities.forEach(a=>{ if(!a.town) a.town="Reading"; });
+
+
+  // ---- Belmont: Youth Archery (10yo); Thursday evening series in Watertown ----
+  activities.push({town:"Belmont",wk:"w3",cat:"sport",name:"Belmont Youth Archery (Series A)",line:"Archery · ages 10–14 · 4 Thursdays",time:"6–7 PM (Thu)",date:"Jul 9–30",loc:"Brown Playground, Watertown",fee:"$223",cost:223,fits:["10"],rest:"best",restLabel:"Best rest · low impact",note:"Runs Thu evenings Jul 9,16,23,30"});
+  activities.push({town:"Belmont",wk:"w9",cat:"sport",name:"Belmont Youth Archery (Series B)",line:"Archery · ages 10–14 · 4 Thursdays",time:"6–7 PM (Thu)",date:"Aug 13–Sep 3",loc:"Brown Playground, Watertown",fee:"$223",cost:223,fits:["10"],rest:"best",restLabel:"Best rest · low impact",note:"Runs Thu evenings Aug 13,20,27,Sep 3"});
+
+
+
+  // ===================== OTHER TOWNS =====================
+  // ---------- LEXINGTON (Community Center, 39 Marrett Rd; many programs residents-first) ----------
+  // Archery (ages 9-15) -> 10yo only. Jul13-16 & Aug10-13, two slots each.
+  activities.push({wk:"w4",town:"Lexington",cat:"sport",name:"Archery Summer Clinic (AM)",line:"Archery · ages 9–15",time:"11:00 AM–12:30 PM",date:"Jul 13–16",loc:"Lex Community Center",fee:"$205–215",cost:205,fits:["10"],rest:"best",restLabel:"Best rest · focus sport",note:"Lexington — residents-first; non-res $215"});
+  activities.push({wk:"w4",town:"Lexington",cat:"sport",name:"Archery Summer Clinic (PM)",line:"Archery · ages 9–15",time:"1:00–2:30 PM",date:"Jul 13–16",loc:"Lex Community Center",fee:"$205–215",cost:205,fits:["10"],rest:"best",restLabel:"Best rest · focus sport",note:"Lexington — residents-first"});
+  activities.push({wk:"w8",town:"Lexington",cat:"sport",name:"Archery Summer Clinic (AM)",line:"Archery · ages 9–15",time:"11:00 AM–12:30 PM",date:"Aug 10–13",loc:"Lex Community Center",fee:"$205–215",cost:205,fits:["10"],rest:"best",restLabel:"Best rest · focus sport",note:"Lexington — residents-first"});
+  activities.push({wk:"w8",town:"Lexington",cat:"sport",name:"Archery Summer Clinic (PM)",line:"Archery · ages 9–15",time:"1:00–2:30 PM",date:"Aug 10–13",loc:"Lex Community Center",fee:"$205–215",cost:205,fits:["10"],rest:"best",restLabel:"Best rest · focus sport",note:"Lexington — residents-first"});
+
+  // Right Brain STEM (ages 8-12) -> both. Jul13-17; Aug10-14 FULL
+  activities.push({wk:"w4",town:"Lexington",cat:"tech",name:"Right Brain STEM: Shark Tank & Architects",line:"STEM · ages 8–12",time:"9 AM–3 PM",date:"Jul 13–17",loc:"Lex Community Center",fee:"$515–525",cost:515,fits:["8","10"],rest:"na",restLabel:"Full rest · indoor",note:"Lexington — residents-first"});
+  activities.push({wk:"w8",town:"Lexington",cat:"tech",name:"Right Brain STEM: Minecraft & LEGO",line:"STEM · ages 8–12",time:"9 AM–3 PM",date:"Aug 10–14",loc:"Lex Community Center",fee:"$515–525",cost:515,fits:["8","10"],rest:"na",restLabel:"Full rest · indoor",full:true,note:"Lexington — residents-first"});
+
+  // Snapology (ages 7-11) -> both. Jul20-24 Minecraft/Robotics; Jul27-31 Pokémon/GameBots
+  activities.push({wk:"w5",town:"Lexington",cat:"tech",name:"Snapology: Mining & Mega Machines Robotics",line:"STEM/robotics · ages 7–11",time:"9 AM–3 PM",date:"Jul 20–24",loc:"Lex Community Center",fee:"$515–525",cost:515,fits:["8","10"],rest:"na",restLabel:"Full rest · indoor",note:"Lexington — residents-first"});
+  activities.push({wk:"w6",town:"Lexington",cat:"tech",name:"Snapology: Pokémania & GameBots Robotics",line:"STEM/robotics · ages 7–11",time:"9 AM–3 PM",date:"Jul 27–31",loc:"Lex Community Center",fee:"$515–525",cost:515,fits:["8","10"],rest:"na",restLabel:"Full rest · Pokémon!",note:"Lexington — residents-first"});
+
+  // Circuit Lab (Lexington)
+  activities.push({wk:"w2",town:"Lexington",cat:"tech",name:"Circuit Lab: Circuit Makers 101 & Robots",line:"Robotics/coding · ages 6–9",time:"9 AM–3 PM",date:"Jun 29–Jul 2",loc:"Lex Community Center",fee:"$385–395",cost:385,fits:["8"],rest:"na",restLabel:"Full rest · indoor",note:"Lexington — fits 8yo; residents-first"});
+  activities.push({wk:"w3",town:"Lexington",cat:"tech",name:"Circuit Lab: Electronics & App Inventors",line:"Coding · ages 9–12",time:"9 AM–3 PM",date:"Jul 6–10",loc:"Lex Community Center",fee:"$475–485",cost:475,fits:["10"],rest:"na",restLabel:"Full rest · indoor",note:"Lexington — fits 10yo; residents-first"});
+  activities.push({wk:"w7",town:"Lexington",cat:"tech",name:"Circuit Lab: Interactive Coding for Kids",line:"Coding · ages 8–11",time:"9 AM–3 PM",date:"Aug 3–7",loc:"Lex Community Center",fee:"$475–485",cost:475,fits:["8","10"],rest:"na",restLabel:"Full rest · indoor",note:"Lexington — residents-first"});
+
+  // Viking Sports (ages 7-12; register via vikingcamps.com/lex) -> both; exclude soccer
+  activities.push({wk:"w2",town:"Lexington",cat:"sport",name:"Viking Ninja Warrior Camp",line:"Ninja/fitness · ages 7–12",time:"9 AM–3 PM",date:"Jun 29–Jul 2",loc:"Clarke MS, Lexington",fee:"$380–390",cost:380,fits:["8","10"],rest:"good",restLabel:"Good variety",note:"Register at vikingcamps.com/lex"});
+  activities.push({wk:"w4",town:"Lexington",cat:"sport",name:"Viking Multi-Sport Camp",line:"Multi-sport · ages 5–12",time:"9 AM–3 PM",date:"Jul 13–17",loc:"Clarke MS, Lexington",fee:"$425–435",cost:425,fits:["8","10"],rest:"good",restLabel:"Good variety",note:"Register at vikingcamps.com/lex"});
+  activities.push({wk:"w5",town:"Lexington",cat:"sport",name:"Viking Basketball Camp",line:"Basketball · ages 7–12",time:"9 AM–3 PM",date:"Jul 20–24",loc:"Clarke MS, Lexington",fee:"$450–460",cost:450,fits:["8","10"],rest:"good",restLabel:"Good variety",note:"Register at vikingcamps.com/lex"});
+  activities.push({wk:"w6",town:"Lexington",cat:"sport",name:"Viking Flag Football Camp",line:"Flag football · ages 7–12",time:"9 AM–3 PM",date:"Jul 27–31",loc:"Clarke MS, Lexington",fee:"$450–460",cost:450,fits:["8","10"],rest:"flag",restLabel:"Higher leg load",note:"Register at vikingcamps.com/lex"});
+  activities.push({wk:"w7",town:"Lexington",cat:"sport",name:"Viking Ninja Warrior Camp",line:"Ninja/fitness · ages 7–12",time:"9 AM–3 PM",date:"Aug 3–7",loc:"Clarke MS, Lexington",fee:"$475–485",cost:475,fits:["8","10"],rest:"good",restLabel:"Good variety",note:"Register at vikingcamps.com/lex"});
+  activities.push({wk:"w8",town:"Lexington",cat:"sport",name:"Viking Multi-Sport Camp",line:"Multi-sport · ages 5–12",time:"9 AM–3 PM",date:"Aug 10–14",loc:"Clarke MS, Lexington",fee:"$425–435",cost:425,fits:["8","10"],rest:"good",restLabel:"Good variety",note:"Register at vikingcamps.com/lex"});
+
+  // Minuteman Sports Clinics (LHS coaches) -> exclude golf 13+, PDP girls, girls hoop
+  activities.push({wk:"w2",town:"Lexington",cat:"sport",name:"Minuteman Boys Hoop (half day)",line:"Basketball · ages 7–13",time:"8:30 AM–12 PM",date:"Jun 29–Jul 2",loc:"Center Rec Complex, Lexington",fee:"$185–195",cost:185,fits:["8","10"],rest:"good",restLabel:"Good variety",note:"Lexington — residents-first"});
+  activities.push({wk:"w3",town:"Lexington",cat:"sport",name:"Minuteman Boys Hoop (full day)",line:"Basketball · ages 7–13",time:"9 AM–3 PM",date:"Jul 6–10",loc:"Lexington HS",fee:"$295–305",cost:295,fits:["8","10"],rest:"good",restLabel:"Good variety",note:"Lexington — residents-first"});
+  activities.push({wk:"w4",town:"Lexington",cat:"sport",name:"Minuteman Badminton Clinic",line:"Badminton · ages 8–16",time:"8:30 AM–12 PM",date:"Jul 13–17",loc:"Lexington HS",fee:"$225–235",cost:225,fits:["8","10"],rest:"best",restLabel:"Best rest · low impact",note:"Lexington — residents-first"});
+  activities.push({wk:"w4",town:"Lexington",cat:"sport",name:"Minuteman Flag Football Clinic",line:"Flag football · ages 7–13",time:"8:30 AM–12 PM",date:"Jul 13–17",loc:"Center Rec Complex, Lexington",fee:"$225–235",cost:225,fits:["8","10"],rest:"flag",restLabel:"Higher leg load",note:"Lexington — residents-first"});
+  activities.push({wk:"w5",town:"Lexington",cat:"sport",name:"Minuteman Multi-Sports Clinic",line:"Multi-sport · ages 7–12",time:"8:30 AM–12 PM",date:"Jul 20–24",loc:"Center Rec Complex, Lexington",fee:"$225–235",cost:225,fits:["8","10"],rest:"good",restLabel:"Good variety",note:"Lexington — residents-first"});
+  activities.push({wk:"w5",town:"Lexington",cat:"sport",name:"Minuteman Track Clinic",line:"Track & field · ages 7–14",time:"8:30 AM–12 PM",date:"Jul 20–24",loc:"Center Track, Lexington",fee:"$225–235",cost:225,fits:["8","10"],rest:"flag",restLabel:"Higher leg load",note:"Lexington — residents-first"});
+  activities.push({wk:"w6",town:"Lexington",cat:"sport",name:"Minuteman Track Clinic",line:"Track & field · ages 7–14",time:"8:30 AM–12 PM",date:"Jul 27–31",loc:"Center Track, Lexington",fee:"$225–235",cost:225,fits:["8","10"],rest:"flag",restLabel:"Higher leg load",note:"Lexington — residents-first"});
+  activities.push({wk:"w6",town:"Lexington",cat:"sport",name:"Minuteman Volleyball Clinic",line:"Volleyball · ages 8–14",time:"8:30 AM–12 PM",date:"Jul 27–31",loc:"Lexington HS",fee:"$225–235",cost:225,fits:["8","10"],rest:"best",restLabel:"Best rest · upper body",note:"Lexington — residents-first"});
+  activities.push({wk:"w7",town:"Lexington",cat:"sport",name:"Minuteman Flag Football Clinic",line:"Flag football · ages 7–13",time:"8:30 AM–12 PM",date:"Aug 3–7",loc:"Center Rec Complex, Lexington",fee:"$225–235",cost:225,fits:["8","10"],rest:"flag",restLabel:"Higher leg load",note:"Lexington — residents-first"});
+
+  // ---------- BELMONT (archery in Watertown; evenings) ----------
+  // Youth Archery ages 10-14 -> 10yo only. Thursday evening 4-week series.
+  activities.push({wk:"w3",town:"Belmont",cat:"sport",name:"Youth Archery (Thu evenings ×4)",line:"Archery · ages 10–14",time:"6:00–7:00 PM Thu",date:"Jul 9 – Jul 30",loc:"Brown Playground, Watertown",fee:"$223",cost:223,fits:["10"],rest:"best",restLabel:"Best rest · focus sport",note:"Belmont — 4 Thursdays; held in Watertown"});
+  activities.push({wk:"w8",town:"Belmont",cat:"sport",name:"Youth Archery (Thu evenings ×4)",line:"Archery · ages 10–14",time:"6:00–7:00 PM Thu",date:"Aug 13 – Sep 3",loc:"Brown Playground, Watertown",fee:"$223",cost:223,fits:["10"],rest:"best",restLabel:"Best rest · focus sport",note:"Belmont — 4 Thursdays; spans into Sept"});
+
+  // ---------- GORDON COLLEGE / LA VIDA (Wenham, ~30-35 min; Christian college) ----------
+  // Adventure Camp: Adventurers ages 8-9 (8yo), Pathfinders ages 10-13 (10yo). 9am-4pm. Weeks 2-8 here (Wk1 Jun15 is pre-summer).
+  var lavida=[["w2","Jun 22–26"],["w3","Jun 29–Jul 3"],["w4","Jul 6–10"],["w5","Jul 13–17"],["w6","Jul 20–24"],["w7","Jul 27–31"],["w8","Aug 3–7"]];
+  lavida.forEach(function(p){
+    activities.push({wk:p[0],town:"Gordon",cat:"sport",name:"La Vida Adventurers (ages 8–9)",line:"Outdoor adventure · ages 8–9",time:"9 AM–4 PM",date:p[1],loc:"Gordon College, Wenham",fee:"Deposit $100",cost:0,fits:["8"],rest:"best",restLabel:"Best rest · climb/paddle/bike",note:"Gordon — pricing at camps.gordon.edu; CAMPBUNDLE26 = 10% off"});
+    activities.push({wk:p[0],town:"Gordon",cat:"sport",name:"La Vida Pathfinders (ages 10–13)",line:"Outdoor adventure · ages 10–13",time:"9 AM–4 PM",date:p[1],loc:"Gordon College, Wenham",fee:"Deposit $100",cost:0,fits:["10"],rest:"best",restLabel:"Best rest · climb/paddle/bike",note:"Gordon — pricing at camps.gordon.edu; CAMPBUNDLE26 = 10% off"});
+  });
+
+  activities.forEach(a=>a._id="a"+(_id++));
+
+  const catName={sport:"Sport",tech:"Tech & Science",art:"Art",mind:"Enrichment"};
+  const townLabel={Reading:"Reading",Lexington:"Lexington",Belmont:"Belmont",Gordon:"Gordon"};
+  let filters={cat:"all",rest:"all",town:"all"};
+  // selections: pick10[weekKey]=[activityId,...], pick8[weekKey]=[activityId,...]
+  let pick10={}, pick8={};
+  // shortlist: set of activity ids the user is considering (stage 1)
+  let shortlist={};            // shortlist[id]=true
+  let viewMode='all';          // 'all' = browse everything, 'short' = only shortlisted
+  function isShort(id){return !!shortlist[id];}
+  function shortCountWk(wk){return activities.filter(a=>a.wk===wk&&isShort(a._id)).length;}
+
+  function actById(id){return activities.find(a=>a._id===id);}
+  function selArr(boy,wk){const st=boy==='10'?pick10:pick8; if(!st[wk])st[wk]=[]; return st[wk];}
+
+  // parse a time string into [startMin,endMin]; for multi-option like "9–12 / 9–3" use the FIRST range (half-day default)
+  function parseRange(t){
+    t=t.replace(/–/g,'-');
+    const first=t.split('/')[0].trim();
+    const m=first.match(/(\d{1,2})(?::(\d{2}))?\s*(AM|PM)?\s*-\s*(\d{1,2})(?::(\d{2}))?\s*(AM|PM)?/i);
+    if(!m) return null;
+    let sh=+m[1], sm=m[2]?+m[2]:0, sap=m[3], eh=+m[4], em=m[5]?+m[5]:0, eap=m[6];
+    // infer am/pm: if end has ap but start doesn't, borrow; default morning
+    if(!eap&&sap)eap=sap; if(!sap&&eap)sap=eap;
+    function to24(h,ap){ if(!ap)return h; ap=ap.toUpperCase(); if(ap==='PM'&&h!==12)h+=12; if(ap==='AM'&&h===12)h=0; return h; }
+    sh=to24(sh,sap); eh=to24(eh,eap);
+    let start=sh*60+sm, end=eh*60+em;
+    if(end<=start)end=start+1;
+    return [start,end];
+  }
+  function overlaps(a,b){
+    const ra=parseRange(a.time), rb=parseRange(b.time);
+    if(!ra||!rb) return false; // if we can't parse, don't block
+    return ra[0]<rb[1] && rb[0]<ra[1];
+  }
+  function conflictIn(boy,wk,cand){
+    return selArr(boy,wk).map(actById).filter(Boolean).filter(x=>x._id!==cand._id&&overlaps(x,cand));
+  }
+
+  function cardHtml(a){
+    const restHtml=a.rest==="na"?`<span class="rest-tag rest-na">🧠 ${a.restLabel}</span>`:`<span class="rest-tag rest-${a.rest}">🦵 ${a.restLabel}</span>`;
+    const noteHtml=a.note?`<div class="note-line">${a.note}</div>`:"";
+    const can10=a.fits.includes("10"), can8=a.fits.includes("8");
+    const on10=selArr('10',a.wk).includes(a._id), on8=selArr('8',a.wk).includes(a._id);
+    const sh=isShort(a._id);
+    const selClass=(on10?" sel10":"")+(on8?" sel8":"")+(sh?" shortlisted":"");
+    // Stage 1: star to shortlist. Stage 2: once shortlisted, reveal per-kid pick buttons.
+    const starBtn=`<button class="star-btn ${sh?'on':''}" title="${sh?'Remove from shortlist':'Add to shortlist'}" onclick="toggleShort('${a._id}')">${sh?'★ Shortlisted':'☆ Shortlist'}</button>`;
+    const pickBtns = sh ? `<div class="pick-btns">
+        <button class="pick-btn b10 ${on10?'on':''}" ${can10?'':'disabled'} onclick="toggle('10','${a.wk}','${a._id}')">${on10?'✓ 10yo':'Pick 10yo'}</button>
+        <button class="pick-btn b8 ${on8?'on':''}" ${can8?'':'disabled'} onclick="toggle('8','${a.wk}','${a._id}')">${on8?'✓ 8yo':'Pick 8yo'}</button>
+      </div>` : '';
+    return `<div class="card ${a.cat}${selClass}" id="card_${a._id}">
+      <div class="card-top"><span class="catpill ${a.cat}">${catName[a.cat]}</span><span class="townpill ${a.town}">${a.town}</span><span class="timetag">${a.time}</span></div>
+      <h3>${a.name} ${a.full?'<span class="full-badge">FULL</span>':''}</h3>
+      <div class="sportline">${a.line}</div>
+      <div class="meta">
+        <div><span class="ic">📅</span><span>${a.date}</span></div>
+        <div><span class="ic">📍</span><span>${a.loc} · ${a.fee}</span></div>
+      </div>
+      ${noteHtml}
+      <div class="rest-row">${restHtml}</div>
+      <div class="card-actions">${starBtn}</div>
+      ${pickBtns}
+    </div>`;
+  }
+
+  window.toggle=function(boy,wk,id){
+    const arr=selArr(boy,wk); const cand=actById(id);
+    const i=arr.indexOf(id);
+    if(i>=0){ arr.splice(i,1); }
+    else {
+      const cf=conflictIn(boy,wk,cand);
+      if(cf.length){
+        const ok=confirm(`Heads up: "${cand.name}" (${cand.time}) overlaps with "${cf[0].name}" (${cf[0].time}) for your ${boy}yo.\n\nAdd it anyway? (They can't attend both if the times truly clash.)`);
+        if(!ok) return;
+      }
+      arr.push(id);
+    }
+    render(); updateSummary();
+  };
+  window.toggleShort=function(id){
+    if(shortlist[id]){
+      delete shortlist[id];
+      // also clear any kid picks for that activity
+      const a=actById(id); if(a){['10','8'].forEach(b=>{const arr=selArr(b,a.wk);const i=arr.indexOf(id);if(i>=0)arr.splice(i,1);});}
+    } else { shortlist[id]=true; }
+    render(); updateSummary();
+  };
+  window.clearOne=function(boy,wk,id){
+    const arr=selArr(boy,wk); const i=arr.indexOf(id); if(i>=0)arr.splice(i,1); render(); updateSummary();
+  };
+  window.clearWeek=function(boy,wk){
+    const st=boy==='10'?pick10:pick8; delete st[wk]; render(); updateSummary();
+  };
+
+  function chipFor(boy,wk,a){
+    const conf=conflictIn(boy,wk,a).length>0;
+    return `<span class="selchip ${boy==='10'?'sc10':'sc8'} ${conf?'conf':''}" title="${a.time}">${a.name} <small>${a.time}</small><button onclick="clearOne('${boy}','${wk}','${a._id}')">×</button></span>`;
+  }
+  function pickPillHtml(boy,wk){
+    const arr=selArr(boy,wk).map(actById).filter(Boolean);
+    const cls= boy==='10'?'p10':'p8'; const lbl= boy==='10'?'10yo':'8yo';
+    const inner = arr.length? arr.map(a=>chipFor(boy,wk,a)).join('') : '<span class="val">— none chosen —</span>';
+    return `<div class="pickpill ${cls}"><span class="lbl">${lbl}:</span><span class="chipwrap">${inner}</span></div>`;
+  }
+  function weekCost(wk){
+    let c=0; selArr('10',wk).map(actById).filter(Boolean).forEach(a=>c+=a.cost||0);
+    selArr('8',wk).map(actById).filter(Boolean).forEach(a=>c+=a.cost||0); return c;
+  }
+  function render(){
+    const board=document.getElementById('board'); board.innerHTML="";
+    weeks.forEach(w=>{
+      let items=activities.filter(a=>a.wk===w.key &&
+        (filters.cat==="all"||a.cat===filters.cat) &&
+        (filters.rest==="all"||a.rest===filters.rest) &&
+        (filters.town==="all"||a.town===filters.town));
+      if(viewMode==='short') items=items.filter(a=>isShort(a._id));
+      const sec=document.createElement('section'); sec.className='week';
+      const shN=shortCountWk(w.key);
+      const wc=weekCost(w.key);
+      const costBadge = wc>0 ? `<span class="wk-cost">$${wc.toLocaleString()}</span>` : '';
+      const shBadge = shN>0 ? `<span class="wk-shct">${shN}★</span>` : '';
+      let inner=`<div class="week-head"><span class="wk-num">${w.num}</span><h2>${w.title}</h2>${shBadge}${costBadge}<span class="dates">${w.dates}</span></div>`;
+      inner+=`<div class="week-pick">${pickPillHtml('10',w.key)}${pickPillHtml('8',w.key)}</div>`;
+      inner+=`<div class="week-body">`;
+      if(items.length){
+        inner+=`<div class="grid">${items.map(cardHtml).join("")}</div>`;
+      } else if(viewMode==='short'){
+        inner+=`<div class="wk-empty">Nothing shortlisted this week yet. Switch to “All options” and tap ☆ on cards you’re considering.</div>`;
+      } else {
+        inner+=`<div class="wk-empty">No matching programs this week for the current filters.</div>`;
+      }
+      inner+=`</div>`; sec.innerHTML=inner; board.appendChild(sec);
+    });
+  }
+
+  function updateSummary(){
+    const c10=Object.keys(pick10).filter(k=>pick10[k]&&pick10[k].length).length;
+    const c8=Object.keys(pick8).filter(k=>pick8[k]&&pick8[k].length).length;
+    document.getElementById('cnt10').textContent=c10;
+    document.getElementById('cnt8').textContent=c8;
+    document.getElementById('cntShort').textContent=Object.keys(shortlist).length;
+    let cost=0;
+    Object.values(pick10).forEach(arr=>(arr||[]).forEach(id=>{const a=actById(id);if(a)cost+=a.cost||0;}));
+    Object.values(pick8).forEach(arr=>(arr||[]).forEach(id=>{const a=actById(id);if(a)cost+=a.cost||0;}));
+    document.getElementById('cost').textContent='$'+cost.toLocaleString();
+  }
+
+  function wire(id,key){document.getElementById(id).addEventListener('click',e=>{const b=e.target.closest('.chip');if(!b)return;[...e.currentTarget.children].forEach(c=>c.classList.remove('active'));b.classList.add('active');filters[key]=b.dataset[key];render();});}
+  wire('catChips','cat');wire('restChips','rest');wire('townChips','town');
+  document.getElementById('viewChips').addEventListener('click',e=>{const b=e.target.closest('.chip');if(!b)return;[...e.currentTarget.children].forEach(c=>c.classList.remove('active'));b.classList.add('active');viewMode=b.dataset.view;render();});
+
+  // modal
+  function buildSummary(){
+    let rows=`<tr><th>Week</th><th>10-year-old</th><th>8-year-old</th><th>Week cost</th></tr>`;
+    let cost=0, anyRows=0;
+    weeks.forEach(w=>{
+      const a10=selArr('10',w.key).map(actById).filter(Boolean);
+      const a8=selArr('8',w.key).map(actById).filter(Boolean);
+      const wc=[...a10,...a8].reduce((s,p)=>s+(p.cost||0),0);
+      cost+=wc;
+      if(a10.length||a8.length) anyRows++;
+      const fmt=(arr,cls)=> arr.length? arr.map(p=>`<span class="${cls}">${p.name}</span> <small>${p.town} · ${p.time} · ${p.fee}</small>`).join('<br>') : `<span class="empty-cell">—</span>`;
+      const wcCell = (a10.length||a8.length)? `<b>$${wc.toLocaleString()}</b>` : '<span class="empty-cell">—</span>';
+      rows+=`<tr><td><b>${w.title.replace('Week of ','')}</b></td><td>${fmt(a10,'c10')}</td><td>${fmt(a8,'c8')}</td><td>${wcCell}</td></tr>`;
+    });
+    if(!anyRows){
+      rows+=`<tr><td colspan="4" class="empty-cell" style="padding:18px 10px;">No specific picks yet. Shortlist options with ☆, then tap “Pick 10yo / Pick 8yo” on the ones you want to lock in.</td></tr>`;
+    }
+    rows+=`<tr class="cost-row"><td>Summer total (resident rates)</td><td colspan="2"></td><td><b>$${cost.toLocaleString()}</b></td></tr>`;
+    document.getElementById('sumtable').innerHTML=rows;
+  }
+  function planText(){
+    let lines=["Reading Rec Summer 2026 — our plan",""];
+    let cost=0;
+    weeks.forEach(w=>{
+      const a10=selArr('10',w.key).map(actById).filter(Boolean);
+      const a8=selArr('8',w.key).map(actById).filter(Boolean);
+      if(!a10.length&&!a8.length) return;
+      lines.push(w.title);
+      a10.forEach(p=>{lines.push(`  10yo: ${p.name} [${p.town}] (${p.time}, ${p.date}, ${p.fee})`);cost+=p.cost||0;});
+      a8.forEach(p=>{lines.push(`  8yo: ${p.name} [${p.town}] (${p.time}, ${p.date}, ${p.fee})`);cost+=p.cost||0;});
+      lines.push("");
+    });
+    lines.push(`Estimated total (resident rates): $${cost.toLocaleString()}`);
+    return lines.join("\n");
+  }
+  document.getElementById('viewPlan').addEventListener('click',()=>{buildSummary();document.getElementById('modalBg').classList.add('show');});
+  document.getElementById('closeModal').addEventListener('click',()=>document.getElementById('modalBg').classList.remove('show'));
+  document.getElementById('modalBg').addEventListener('click',e=>{if(e.target.id==='modalBg')document.getElementById('modalBg').classList.remove('show');});
+  document.getElementById('copyPlan').addEventListener('click',()=>{
+    const txt=planText();
+    navigator.clipboard?.writeText(txt).then(()=>{
+      const b=document.getElementById('copyPlan'); const o=b.textContent; b.textContent='Copied!'; setTimeout(()=>b.textContent=o,1500);
+    }).catch(()=>{ alert(txt); });
+  });
+  document.getElementById('clearAll').addEventListener('click',()=>{
+    const any=Object.values(pick10).some(a=>a&&a.length)||Object.values(pick8).some(a=>a&&a.length);
+    if(!any) return;
+    if(confirm('Clear all selections?')){pick10={};pick8={};render();updateSummary();}
+  });
+
+  render(); updateSummary();
+</script>
+</body>
+</html>
