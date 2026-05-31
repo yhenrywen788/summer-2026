@@ -149,6 +149,9 @@
   .detail-meta{display:grid;grid-template-columns:auto 1fr;gap:9px 18px;font-size:.92rem;margin:20px 0 4px;}
   .detail-meta dt{font-weight:700;color:var(--moss-deep);white-space:nowrap;}
   .detail-meta dd{color:#4a5a4d;}
+  .detail-desc{font-size:.92rem;color:#3a4a3d;line-height:1.55;margin:14px 0 2px;}
+  .detail-src{display:inline-block;font-size:.82rem;font-weight:600;color:var(--moss);text-decoration:none;border-bottom:1px solid var(--moss);margin-top:4px;}
+  .detail-src:hover{color:var(--clay);border-color:var(--clay);}
   .detail-note{background:rgba(224,169,46,.12);border-left:3px solid var(--sun);padding:11px 14px;border-radius:8px;font-size:.86rem;color:#8a6a22;margin-top:14px;}
   .detail-actions{display:flex;gap:10px;margin-top:22px;flex-wrap:wrap;}
   .detail-actions .star-btn,.detail-actions .pick-btn{width:auto;flex:1;min-width:130px;}
@@ -567,6 +570,62 @@
   // ---- camp detail modal ----
   let detailId=null;
   function weekTitle(wk){const w=weeks.find(x=>x.key===wk);return w?w.title:wk;}
+
+  // Extended descriptions pulled from official program / registration pages (May 2026).
+  const descMap={
+    "SNL Super Sports":{u:"https://readingma.myrec.com/info/activities/program_details.aspx?ProgramID=30094",d:`This program will group children into their age group to play the following sports: Basketball, Flag Football, Whiffle Ball, Soccer, Dodgeball and many more! Multiple sports will be played daily with the focus of having fun!`},
+    "SNL Outdoor Basketball":{u:"https://readingma.myrec.com/info/activities/program_details.aspx?ProgramID=30192",d:`Get ready to hit the courts this summer! Our Outdoor Basketball Program is the perfect place for players of all skill levels to develop their game, stay active, and most importantly — have fun. Participants will learn fundamental skills including dribbling, shooting, passing, and defense through drills, games, and friendly competition. The program welcomes both beginners and experienced players at the new outdoor basketball courts at Birch Meadow Complex.`},
+    "SNL Field Hockey Clinic":{u:"https://readingma.myrec.com/info/activities/program_details.aspx?ProgramID=30089",d:`Come work with Jessica Palmer, former Merrimack College Field Hockey player and current Reading High School JV Coach/Varsity Assistant. Each day starts with a fun game to get everyone moving, followed by stretching and warm up, then focuses on developing essential stick skills and passing techniques through drills. Each day ends with a friendly field hockey game to put everything into action.`},
+    "Nerf Battlegrounds":{u:"https://readingma.myrec.com/info/activities/program_details.aspx?ProgramID=30008",d:`Test individual and team effectiveness in battle with the Sports Zone Lieutenants! This program reimagines traditional games like capture the flag, combining exercise, strategic planning, skill development, and social opportunities. The curriculum rotates weekly with different games featuring individual and team-based challenges, plus various obstacles, to keep the experience fresh. All necessary equipment is provided.`},
+    "Junior Badminton":{u:"https://readingma.myrec.com/info/activities/program_details.aspx?ProgramID=30145",d:`This class introduces the fundamental skills, rules, and strategies of badminton, covering basic techniques and etiquette of both singles and doubles play. Students also participate in fun activities and challenges that improve overall hand-eye coordination, team communication, and physical fitness. The goal is to start students on the journey to a lifetime of badminton fun!`},
+    "Bump, Set, Spike Volleyball":{u:"https://readingma.myrec.com/info/activities/program_details.aspx?ProgramID=30080",d:`A low-pressure way to help students learn and develop their volleyball skills. The session covers instruction on the six fundamentals — passing, setting, spiking, serving, digging, and blocking — through learning activities, skill-building challenges, and games. Open to both boys and girls; players may bring their own volleyball but it is not required.`},
+    "SNL Flag Football Clinic":{u:"https://readingma.myrec.com/info/activities/program_details.aspx?ProgramID=30152",d:`SNL brings in former RMHS Quarterbacks and current college football players James and Jack Murphy to deliver a fun and educational flag football program. The goal is to teach the fundamentals of each football skill and position so players better comprehend and appreciate the sport. Includes fun drills and contests that accelerate improvement and foster a love for the game, catering to all skill levels.`},
+    "Baseball Clinic":{u:"https://readingma.myrec.com/info/activities/program_details.aspx?ProgramID=30037",d:`Join RMHS Varsity Baseball Coach Dave Blanchard and his staff for this 4-day clinic. Players (boys and girls) get instruction in the fundamentals of baseball, with hitting, fielding and pitching instruction as well as team games and competitions. Bring a light non-refrigerated snack each day and plenty of water.`},
+    "SNL Basketball Clinic":{u:"https://readingma.myrec.com/info/activities/program_details.aspx?ProgramID=30100",d:`Camp Directors are Lance Dottin (MA Hall of Fame coach at Cambridge Rindge and Latin, 3 state titles, 473 wins), Carl McFadden (owner of SNL Sports Academy and a 20-year Reading assistant coach), and Jeff Nelson (nearly 20 years as an NBA scout). The clinic focuses on skill development, team contests and games. Open to both boys and girls!`},
+    "SNL Boys Lacrosse Clinic":{u:"https://readingma.myrec.com/info/activities/program_details.aspx?ProgramID=30088",d:`Led by Coach Kevin Tobin (UMass) and former Division 1 UMass players, with a focus on skill development — consistent work on ground balls, passing, catching, shooting and footwork, plus mini-games and competitions. Younger players work on basic skills and rules; older players develop all categories of the game with some competitive small-field play.`},
+    "Summer Daycation":{u:"https://readingma.myrec.com/info/activities/program_details.aspx?ProgramID=29971",d:`Children entering grades K–7 enjoy fun experiences in Arts & Crafts, Science & Nature, Sports & Games, and Cooperative Games. Each week has a different theme (Discovery Week, Reading White & Blue, The Greatest Show on Earth talent show, Surf's Up, Olympic Games, Dodgeball Week, Spirit Week). The Recreation Division organizes special events with performers and inflatable water slides throughout the summer, with a 10-to-1 staff ratio.`},
+    "Quickstart Tennis":{u:"https://readingma.myrec.com/info/activities/program_details.aspx?ProgramID=22893",d:`For children ready to learn and develop the basic fundamentals of forehands, backhands, serves and volleys through practice drills and skill games. Players at the higher level develop skills in rallying, control and point play. A great way to get introduced to tennis and/or build upon existing skills at all levels.`},
+    "Hands-On Electronics":{u:"https://hopkintonma.myrec.com/info/activities/program_details.aspx?ProgramID=31021",d:`Tinker with electronics while learning the basics of computer programming. The class begins by experimenting with the fundamentals of electronics and circuitry, and steps up to projects where young makers design their own interactive and programmable devices.`},
+    "App Inventors":{u:"https://hopkintonma.myrec.com/info/activities/program_details.aspx?ProgramID=31021",d:`Want to know how the apps on your phone or iPad work — or already have the next great app idea? This course uses MIT App Inventor software to make fun, creative apps for Android phones and tablets, exploring wireless communication through custom Bluetooth hardware while learning both programming and design.`},
+    "Masterpiece Makers":{u:"https://rascamps.com/camps/masterpiece-makers/",d:`Campers learn fundamental concepts of art (line, color, shape, perspective, and more) through hands-on skill building and technique development. Each day campers create two unique masterpieces, exploring a wide range of mediums and art styles — designing a puppet, building with clay, or exploring new drawing techniques — with interactive games, storytelling, and collaboration.`},
+    "100 Hands-On Science Experiments":{u:"https://andoverma.myrec.com/info/activities/program_details.aspx?ProgramID=30632",d:`From Top Secret Science, which has worked hands-on with over 2 million local children. Each day kids explore up to 20 weird and wacky hands-on experiments and make and take home at least 10 projects — covering motion and flying things, air and water pressure, crazy chemistry, light and sound, science magic, electricity, magnets, astronomy and more. Each child receives a free t-shirt.`},
+    "Chess Wizards":{u:"https://chesswizards.com/camps-registration/",d:`Chess Wizards Camps provide a safe, structured environment with a one-of-a-kind blend of challenging chess lessons, exciting games, and cool prizes. Team chess games, puzzles, skill-building, and chess variants integrate the whole person into camp. A typical day might include a technical chess concept, group challenges that hone chess thinking patterns, a healthy snack, a mini-tournament, capture-the-flag, and blob tag.`},
+    "LEGO Challenges":{u:"https://www.play-well.org/",d:`Play-Well TEKnologies uses expert instructors and tens of thousands of LEGO bricks to build problem-solving skills, provide an opportunity for creative expression, and foster a greater appreciation of how things work. In fun-filled engineering and architectural projects, campers dive into massive collections of LEGO to build elaborate objects, structures and vehicles while exploring fundamental engineering and physics principles.`},
+    "Archery Summer Clinic":{u:"https://lexrecma.myrec.com/info/activities/program_details.aspx?ProgramID=30001",d:`Archery is an individual sport that provides the opportunity for anyone to do well — benefits include exercise, mental focus, self-discipline, and social interaction with peers. The program teaches the fundamentals of good form, technique, and how to be safe. Taught by Shawn Bowlby, who has 20+ years of experience and has won the national indoor championship 8 times. Archery equipment is provided.`},
+    "Right Brain STEM":{u:"https://lexrecma.myrec.com/info/activities/program_details.aspx?ProgramID=30803",d:`Right Brain Curriculum's clinics combine hands-on building with creative problem-solving. In LEGO Creators, the community builds and governs a world-class LEGO city complete with everything incoming residents need. In Shark Tank Jr, kids put on their inventor's hat to design the business of their dreams — from a side-less taco to a no-spill baby bottle.`},
+    "Snapology":{u:"https://lexrecma.myrec.com/info/activities/program_details.aspx?ProgramID=30950",d:`Children learn through play — when actively engaged in hands-on, interactive activities, their creativity flourishes. In the Mining & Building theme, mornings are spent building Minecraft-inspired worlds with LEGO bricks and afternoons designing and programming machines through robotics challenges. In Pokémania, kids design training gyms, create battle scenes, and invent their own Pokémon characters.`},
+    "Circuit Lab":{u:"https://lexrecma.myrec.com/info/activities/program_details.aspx?ProgramID=30946",d:`Electronics power our world more every day, and people who can manipulate them will design our future. Circuit Lab classes combine technical concepts with hands-on experimentation in a creative environment using up-to-date technologies. Each day includes introductions to new concepts and guided hands-on activities with open-ended project challenges — a fun, creative way to give kids fluency and confidence in increasingly necessary skills.`},
+    "Viking":{u:"https://www.vikingcamps.com/lexington/",d:`Viking Sports Camps keep kids active all day. The Ninja Warrior camp is where Boot Camp meets Ninja Warrior — high-energy activities that improve cardiovascular fitness, strength, and agility, with kids practicing exercise sets to tackle the Viking Ninja Warrior obstacle course at the end of each day. Multi-Sport, Basketball, and Flag Football camps follow the same energetic, skill-building format.`},
+    "Minuteman":{u:"https://www.lexingtonma.gov/2504/Summer-Sports-Clinics-and-Classes",d:`The Minuteman Sports Clinics, run by Lexington High School coaches, offer youth participants the chance to learn a new sport or further develop their skills through drills and fun team games. Offerings include Badminton, Basketball (Boys & Girls Hoop), Flag Football, Floor Hockey, Multi-Sports, Track, and Volleyball.`},
+    "Belmont Youth Archery":{u:"https://belmontma.myrec.com/info/activities/program_details.aspx?ProgramID=29832",d:`Experience the thrill of traditional recurve archery, as seen in the Olympics. Participants learn the fundamentals of the shot process and test their skills in a series of unique challenges and archery games designed to improve accuracy. Led by certified USA Archery and NFAA instructors, the "learn by playing" philosophy lets students enjoy shooting while practicing fundamentals of the shot process.`},
+    "La Vida Adventurers":{u:"https://www.gordon.edu/lavida/youth",d:`A strong first step for younger campers. Adventurers is built around climbing, games, team challenges, and creative play, with extra support and a nurturing camp rhythm.`},
+    "La Vida Pathfinders":{u:"https://www.gordon.edu/lavida/youth",d:`The core Adventure Camp experience. Pathfinders climb, paddle, bike, and take on new challenges all week long while building confidence, independence, and strong friendships.`}
+  };
+  function descKey(a){
+    let n=a.name;
+    if(n.includes(':')) n=n.split(':')[0];
+    n=n.replace(/\s*\([^)]*\)\s*$/,'').trim();
+    if(/^Viking/.test(n)) return 'Viking';
+    if(/^Minuteman/.test(n)) return 'Minuteman';
+    if(/Archery/.test(n) && a.town==='Belmont') return 'Belmont Youth Archery';
+    return n;
+  }
+
+  // Day-of-week from the actual 2026 calendar (for contiguous same-week ranges only)
+  const _MON={Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Sept:8,Oct:9,Nov:10,Dec:11};
+  const _DOW=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  function dowLabel(dateStr){
+    let s=dateStr.replace(/–/g,'-').replace(/\([^)]*\)/g,'').trim();
+    const m=s.match(/([A-Za-z]{3,4})\s+(\d{1,2})\s*-\s*(?:([A-Za-z]{3,4})\s+)?(\d{1,2})/);
+    if(!m) return '';
+    const sM=_MON[m[1]]; if(sM==null) return '';
+    const eM=m[3]?_MON[m[3]]:sM; if(eM==null) return '';
+    const sd=new Date(2026,sM,+m[2]), ed=new Date(2026,eM,+m[4]);
+    const span=(ed-sd)/86400000;
+    if(span<0||span>6) return '';            // skip multi-week (recurring single-weekday) series
+    const a=_DOW[sd.getDay()], b=_DOW[ed.getDay()];
+    return a===b?a:`${a}–${b}`;
+  }
   window.cardClick=function(e,id){
     if(e.target.closest('button')) return; // let star/pick buttons handle their own clicks
     detailId=id; renderDetail();
@@ -580,6 +639,11 @@
     const restHtml=a.rest==='na'?`🧠 ${a.restLabel}`:`🦵 ${a.restLabel}`;
     const fitsTxt=[can10?'10-year-old':null,can8?'8-year-old':null].filter(Boolean).join(' & ')||'—';
     const feeTxt=a.cost?`${a.fee} · counts as $${a.cost.toLocaleString()} in tally`:`${a.fee} · not included in tally`;
+    const info=descMap[descKey(a)]||{};
+    const dow=dowLabel(a.date);
+    const dateTxt=dow?`<b>${dow}</b> · ${a.date}`:a.date;
+    const descHtml=info.d?`<p class="detail-desc">${info.d}</p>`:'';
+    const srcHtml=info.u?`<a class="detail-src" href="${info.u}" target="_blank" rel="noopener">Program details ↗</a>`:'';
     const pickBtns = sh ? `
         <button class="pick-btn b10 ${on10?'on':''}" ${can10?'':'disabled'} onclick="toggle('10','${a.wk}','${a._id}');renderDetail();">${on10?'✓ 10yo picked':'Pick 10yo'}</button>
         <button class="pick-btn b8 ${on8?'on':''}" ${can8?'':'disabled'} onclick="toggle('8','${a.wk}','${a._id}');renderDetail();">${on8?'✓ 8yo picked':'Pick 8yo'}</button>` : '';
@@ -591,9 +655,11 @@
       </div>
       <h2>${a.name}</h2>
       <div class="msub">${a.line}</div>
+      ${descHtml}
+      ${srcHtml}
       <dl class="detail-meta">
         <dt>Week</dt><dd>${weekTitle(a.wk)}</dd>
-        <dt>Dates</dt><dd>${a.date}</dd>
+        <dt>Dates</dt><dd>${dateTxt}</dd>
         <dt>Time</dt><dd>${a.time}</dd>
         <dt>Location</dt><dd>${a.loc}</dd>
         <dt>Fee</dt><dd>${feeTxt}</dd>
